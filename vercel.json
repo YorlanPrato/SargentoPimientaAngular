@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npx @angular/cli build",
   "outputDirectory": "dist/sargento-pimienta-angular",
-  "devCommand": "npm start",
+  "devCommand": "npx @angular/cli serve",
   "installCommand": "npm install"
 }
