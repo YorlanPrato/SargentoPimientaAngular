@@ -1,5 +1,5 @@
 import { Component, signal, computed, inject, HostListener } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from './components/toast/toast.component';
 
@@ -12,7 +12,7 @@ interface NavItem {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, ToastComponent],
+  imports: [RouterOutlet, CommonModule, ToastComponent],
   templateUrl: './app.component.html',
 })
 export class AppComponent {
