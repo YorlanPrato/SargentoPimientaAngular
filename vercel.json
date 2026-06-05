@@ -2,5 +2,11 @@
   "buildCommand": "node node_modules/@angular/cli/bin/ng build",
   "outputDirectory": "dist/sargento-pimienta",
   "devCommand": "node node_modules/@angular/cli/bin/ng serve",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
