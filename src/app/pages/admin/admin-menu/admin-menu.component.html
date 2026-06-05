@@ -1,0 +1,196 @@
+<div class="min-h-screen bg-[#121212]">
+  <!-- Header -->
+  <div class="bg-[#1E1E1E] border-b border-[#F5F5F4]/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <button
+        (click)="goBack()"
+        class="text-[#F5F5F4] hover:text-[#F59E0B] transition-all flex items-center gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+          <line x1="19" y1="6" x2="5" y2="6"/>
+        </svg>
+        Volver al Dashboard
+      </button>
+      <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+        Gestión de Menú
+      </h1>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    @if (isEditing()) {
+      <!-- Edit/Create Form -->
+      <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
+        <h2 class="text-xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
+          @if (editingItem()?.id) {
+            Editar Plato
+          } @else {
+            Nuevo Plato
+          }
+        </h2>
+        <form (ngSubmit)="saveItem()">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block mb-2 text-[#F5F5F4]">Nombre</label>
+              <input
+                type="text"
+                [value]="editingItem()!.nombre"
+                (input)="editingItem()!.nombre = $any($event.target).value"
+                class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+                required
+              />
+            </div>
+            <div>
+              <label class="block mb-2 text-[#F5F5F4]">Precio</label>
+              <input
+                type="number"
+                [value]="editingItem()!.precio"
+                (input)="editingItem()!.precio = parseFloat($any($event.target).value)"
+                class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+                required
+              />
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="block mb-2 text-[#F5F5F4]">Categoría</label>
+            <select
+              [value]="editingItem()!.categoria_id"
+              (change)="editingItem()!.categoria_id = parseInt($any($event.target).value)"
+              class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+              required
+            >
+              @for (cat of categorias(); track cat.id) {
+                <option [value]="cat.id">{{ cat.nombre }}</option>
+              }
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="block mb-2 text-[#F5F5F4]">Descripción</label>
+            <textarea
+              [value]="editingItem()!.descripcion"
+              (input)="editingItem()!.descripcion = $any($event.target).value"
+              class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block mb-2 text-[#F5F5F4]">Imagen</label>
+            <input
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+            />
+            @if (editingItem()!.imagen_url) {
+              <div class="mt-2">
+                <img
+                  [src]="editingItem()!.imagen_url"
+                  alt="Imagen actual"
+                  class="h-32 object-cover rounded"
+                />
+              </div>
+            }
+          </div>
+          <div class="mb-4">
+            <label class="flex items-center gap-2 text-[#F5F5F4]">
+              <input
+                type="checkbox"
+                [checked]="editingItem()!.disponible"
+                (change)="editingItem()!.disponible = $any($event.target).checked"
+                class="w-5 h-5"
+              />
+              Disponible
+            </label>
+          </div>
+          <div class="flex gap-2">
+            <button
+              type="submit"
+              class="bg-[#4ADE80] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#4ADE80]/90 transition-all"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="bg-[#DC2626] text-white px-6 py-2 rounded-lg hover:bg-[#DC2626]/90 transition-all"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="flex justify-center items-center h-64">
+        <svg class="animate-spin h-12 w-12 text-[#F59E0B]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+    } @else {
+      <div class="mb-4">
+        <button
+          (click)="startNew()"
+          class="bg-[#F59E0B] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+        >
+          + Nuevo Plato
+        </button>
+      </div>
+
+      <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-[#2A2A2A]">
+            <tr>
+              <th class="px-6 py-3 text-left text-[#F5F5F4]">Nombre</th>
+              <th class="px-6 py-3 text-left text-[#F5F5F4]">Categoría</th>
+              <th class="px-6 py-3 text-left text-[#F5F5F4]">Precio</th>
+              <th class="px-6 py-3 text-left text-[#F5F5F4]">Disponible</th>
+              <th class="px-6 py-3 text-left text-[#F5F5F4]">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of menuItems(); track item.id) {
+              <tr class="border-b border-[#F5F5F4]/10 hover:bg-[#2A2A2A]">
+                <td class="px-6 py-4 text-[#F5F5F4]">{{ item.nombre }}</td>
+                <td class="px-6 py-4 text-[#F5F5F4]">{{ item.categorias?.nombre || '-' }}</td>
+                <td class="px-6 py-4 text-[#F5F5F4]">${{ item.precio.toFixed(2) }}</td>
+                <td class="px-6 py-4">
+                  @if (item.disponible) {
+                    <span class="bg-[#4ADE80] text-[#121212] px-3 py-1 rounded-full text-sm">Sí</span>
+                  } @else {
+                    <span class="bg-[#DC2626] text-white px-3 py-1 rounded-full text-sm">No</span>
+                  }
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex gap-2">
+                    <button
+                      (click)="startEdit(item)"
+                      class="bg-[#F59E0B] text-[#121212] px-3 py-1 rounded hover:bg-[#F59E0B]/90 transition-all"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      (click)="deleteItem(item.id!)"
+                      class="bg-[#DC2626] text-white px-3 py-1 rounded hover:bg-[#DC2626]/90 transition-all"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (menuItems().length === 0) {
+          <div class="text-center py-8 text-[#A8A8A8]">
+            No hay platos registrados
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

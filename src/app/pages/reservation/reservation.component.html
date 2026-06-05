@@ -1,0 +1,173 @@
+<div class="min-h-screen py-12 px-4 page-enter">
+  <div class="max-w-2xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h2 class="text-4xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
+        Reservar Mesa
+      </h2>
+      <p class="text-[#A8A8A8]">
+        Complete el formulario para asegurar su mesa en Sargento Pimienta 2.0
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form (submit)="handleSubmit($event)" class="bg-[#1E1E1E] rounded-lg p-8 space-y-6">
+
+      <!-- Cédula -->
+      <div>
+        <label class="flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+          Cédula de Identidad
+        </label>
+        <div class="flex gap-2 flex-col sm:flex-row">
+          <select
+            [value]="nationality()"
+            (change)="onNationalityChange($event)"
+            class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
+                   focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full sm:w-20"
+          >
+            <option value="V">V</option>
+            <option value="E">E</option>
+          </select>
+          <input
+            type="text"
+            [value]="idNumber()"
+            (input)="onIdChange($event)"
+            placeholder="12345678"
+            maxlength="9"
+            class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
+                   focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+          />
+        </div>
+      </div>
+
+      <!-- Nombre -->
+      <div>
+        <label class="flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Nombre Completo
+        </label>
+        <input
+          type="text"
+          [value]="fullName()"
+          (input)="onNameChange($event)"
+          placeholder="Ingrese su nombre completo"
+          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
+                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+        />
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label class="flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          Teléfono
+        </label>
+        <input
+          type="tel"
+          [value]="phone()"
+          (input)="onPhoneChange($event)"
+          placeholder="04241234567"
+          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
+                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+        />
+      </div>
+
+      <!-- Comensales -->
+      <div>
+        <label class="flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Número de Comensales
+        </label>
+        <div class="flex gap-3 flex-wrap">
+          @for (num of guestOptions; track num) {
+            <button
+              type="button"
+              (click)="setGuests(num)"
+              class="w-12 h-12 rounded-lg transition-all"
+              [class]="guests() === num
+                ? 'bg-[#F59E0B] text-[#121212]'
+                : 'bg-[#121212] text-[#F5F5F4] hover:bg-[#2A2A2A]'"
+            >
+              {{ num }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Fecha -->
+      <div>
+        <label class="flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Fecha
+        </label>
+        <input
+          type="date"
+          [value]="selectedDate()"
+          (change)="onDateChange($event)"
+          [min]="today"
+          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
+                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+        />
+      </div>
+
+      <!-- Hora -->
+      <div>
+        <label class="flex items-center gap-2 mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          Hora
+        </label>
+        <select
+          [value]="selectedTime()"
+          (change)="onTimeChange($event)"
+          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
+                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+        >
+          <option value="">Seleccione una hora</option>
+          @for (time of operatingHours; track time) {
+            <option [value]="time">{{ formatTo12Hour(time) }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="w-full bg-[#F59E0B] text-[#121212] px-6 py-4 rounded-lg
+               hover:bg-[#F59E0B]/90 transition-all flex items-center justify-center gap-2 mt-8 font-medium"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Confirmar Reserva
+      </button>
+
+    </form>
+  </div>
+</div>

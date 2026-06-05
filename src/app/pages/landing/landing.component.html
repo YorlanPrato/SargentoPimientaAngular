@@ -1,0 +1,124 @@
+<div class="min-h-screen page-enter">
+
+  <!-- ─── Hero Section with Events Carousel (Desktop) ─────────────────── -->
+  <div class="relative min-h-[60vh]">
+    <div
+      class="absolute inset-0 bg-cover bg-center"
+      style="background-image: url('https://images.unsplash.com/photo-1709548145082-04d0cde481d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080')"
+    >
+      <div class="absolute inset-0 bg-black/60"></div>
+    </div>
+
+    <div class="relative z-10 min-h-[60vh] flex items-center px-4">
+      <div class="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-8 items-center">
+
+        <!-- Left: Restaurant Info -->
+        <div class="text-center md:text-left">
+          <!-- Music icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-[#F59E0B] mb-6 mx-auto md:mx-0"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+
+          <h1 class="text-5xl md:text-6xl mb-4 tracking-tight"
+              style="font-family: 'Urbanist', sans-serif; font-weight: 500">
+            Sargento Pimienta 2.0
+          </h1>
+
+          <p class="text-xl md:text-2xl text-[#F5F5F4]/80 mb-8 max-w-2xl">
+            Donde la música se encuentra con la gastronomía excepcional
+          </p>
+
+          <button
+            (click)="goToReserve()"
+            class="bg-[#F59E0B] text-[#121212] px-8 py-4 rounded-lg hover:bg-[#F59E0B]/90
+                   transition-all hover:scale-105 shadow-lg font-medium"
+          >
+            Reservar Mesa
+          </button>
+        </div>
+
+        <!-- Right: Events Carousel (Desktop only) - Integrated -->
+        <div class="hidden md:block relative">
+          <div class="scale-110">
+            <app-events-carousel [showHeader]="false" [minimal]="true" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Events Carousel (Mobile only) ───────────────────────────────── -->
+  <div class="md:hidden">
+    <app-events-carousel />
+  </div>
+
+  <!-- ─── Info Section ──────────────────────────────────────────────── -->
+  <div class="bg-[#1E1E1E] py-16 px-4">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+
+      <!-- Horarios -->
+      <div class="text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-[#F59E0B] mx-auto mb-4"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <h3 class="mb-2 text-xl" style="font-family: 'Urbanist', sans-serif">Horarios</h3>
+        <p class="text-[#A8A8A8]">Sábado - Jueves: 5:00 PM - 02:00 AM</p>
+        <p class="text-[#A8A8A8]">Domingo - Lunes: Cerrado</p>
+      </div>
+
+      <!-- Ubicación -->
+      <div class="text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-[#F59E0B] mx-auto mb-4"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <h3 class="mb-2 text-xl" style="font-family: 'Urbanist', sans-serif">Ubicación</h3>
+        <p class="text-[#A8A8A8]">Calle 14 entre carrera 20 y 21</p>
+        <p class="text-[#A8A8A8]">Barrio Obrero, San Cristóbal, Táchira</p>
+      </div>
+
+      <!-- Instagram -->
+      <div class="text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-[#F59E0B] mx-auto mb-4"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+        <h3 class="mb-2 text-xl" style="font-family: 'Urbanist', sans-serif">Instagram</h3>
+        <a
+          href="https://www.instagram.com/sargentopimienta_sc/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[#A8A8A8] hover:text-[#F59E0B] transition-colors"
+        >
+          &#64;sargentopimienta_sc
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── Atmosphere Section (Desktop only) ──────────────────────────── -->
+  <div class="hidden md:block py-16 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-4xl mb-6" style="font-family: 'Urbanist', sans-serif; font-weight: 500">
+        Una Experiencia Única
+      </h2>
+      <p class="text-[#A8A8A8] text-lg leading-relaxed">
+        Sumérgete en la atmósfera bohemia de nuestro bar-restaurante, donde cada noche
+        es una celebración del rock clásico y la cocina contemporánea. Desde los acordes
+        de las guitarras hasta los sabores exquisitos de nuestros platos, cada detalle
+        está diseñado para crear momentos inolvidables.
+      </p>
+    </div>
+  </div>
+
+</div>

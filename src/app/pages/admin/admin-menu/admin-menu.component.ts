@@ -1,0 +1,173 @@
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { SupabaseService } from '../../../services/supabase.service';
+import { ToastService } from '../../../services/toast.service';
+import { Menu, Categoria } from '../../../models/supabase';
+
+@Component({
+  selector: 'app-admin-menu',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './admin-menu.component.html',
+})
+export class AdminMenuComponent implements OnInit {
+  private router = inject(Router);
+  private supabase = inject(SupabaseService);
+  private toast = inject(ToastService);
+
+  menuItems = signal<Menu[]>([]);
+  categorias = signal<Categoria[]>([]);
+  isLoading = signal(true);
+  isEditing = signal(false);
+  editingItem = signal<Menu | null>(null);
+  newItem = signal<Menu>({
+    nombre: '',
+    descripcion: '',
+    precio: 0,
+    categoria_id: 0,
+    disponible: true
+  });
+  selectedFile = signal<File | null>(null);
+  isUploading = signal(false);
+
+  async ngOnInit(): Promise<void> {
+    if (!localStorage.getItem('adminAuthenticated')) {
+      this.router.navigate(['/admin']);
+      return;
+    }
+    await this.loadData();
+  }
+
+  async loadData(): Promise<void> {
+    this.isLoading.set(true);
+    const [menuData, categoriasData] = await Promise.all([
+      this.supabase.getMenu(),
+      this.supabase.getCategorias()
+    ]);
+
+    if (menuData.data) this.menuItems.set(menuData.data);
+    if (categoriasData.data) this.categorias.set(categoriasData.data);
+    this.isLoading.set(false);
+  }
+
+  startEdit(item: Menu): void {
+    this.isEditing.set(true);
+    this.editingItem.set({ ...item });
+  }
+
+  startNew(): void {
+    this.isEditing.set(true);
+    this.editingItem.set({
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      categoria_id: this.categorias()[0]?.id || 0,
+      disponible: true
+    });
+  }
+
+  cancelEdit(): void {
+    this.isEditing.set(false);
+    this.editingItem.set(null);
+    this.selectedFile.set(null);
+  }
+
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.selectedFile.set(file);
+    }
+  }
+
+  async uploadImage(file: File): Promise<string | null> {
+    const fileName = `${Date.now()}-${file.name}`;
+    const { data, error } = await this.supabase.uploadImage('imagenes-menu', file, fileName);
+    
+    if (error || !data) {
+      this.toast.error('Error', 'No se pudo subir la imagen');
+      return null;
+    }
+
+    const publicUrl = this.supabase.getPublicUrl('imagenes-menu', data.path);
+    return publicUrl;
+  }
+
+  async saveItem(): Promise<void> {
+    const item = this.editingItem();
+    if (!item) return;
+
+    this.isUploading.set(true);
+
+    let imageUrl: string | undefined = item.imagen_url;
+
+    if (this.selectedFile()) {
+      imageUrl = await this.uploadImage(this.selectedFile()!) || undefined;
+      if (!imageUrl) {
+        this.isUploading.set(false);
+        return;
+      }
+    }
+
+    if (item.id) {
+      const { error } = await this.supabase.updatePlato(item.id, {
+        nombre: item.nombre,
+        descripcion: item.descripcion,
+        precio: item.precio,
+        categoria_id: item.categoria_id,
+        disponible: item.disponible,
+        imagen_url: imageUrl
+      });
+
+      if (error) {
+        this.toast.error('Error', error.message);
+      } else {
+        this.toast.success('Éxito', 'Plato actualizado');
+      }
+    } else {
+      const { error } = await this.supabase.createPlato({
+        nombre: item.nombre,
+        descripcion: item.descripcion,
+        precio: item.precio,
+        categoria_id: item.categoria_id,
+        disponible: item.disponible,
+        imagen_url: imageUrl
+      });
+
+      if (error) {
+        this.toast.error('Error', error.message);
+      } else {
+        this.toast.success('Éxito', 'Plato creado');
+      }
+    }
+
+    this.isUploading.set(false);
+    this.cancelEdit();
+    await this.loadData();
+  }
+
+  async deleteItem(id: number): Promise<void> {
+    if (!confirm('¿Está seguro de eliminar este plato?')) return;
+
+    const { error } = await this.supabase.deletePlato(id);
+    if (error) {
+      this.toast.error('Error', error.message);
+    } else {
+      this.toast.success('Éxito', 'Plato eliminado');
+      await this.loadData();
+    }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/admin/dashboard']);
+  }
+
+  parseFloat(value: string): number {
+    return parseFloat(value);
+  }
+
+  parseInt(value: string): number {
+    return parseInt(value, 10);
+  }
+}

@@ -1,0 +1,119 @@
+<div class="min-h-screen bg-[#121212]">
+  <!-- Header -->
+  <div class="bg-[#1E1E1E] border-b border-[#F5F5F4]/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+        Panel de Administración
+      </h1>
+      <button
+        (click)="logout()"
+        class="bg-[#DC2626] text-white px-4 py-2 rounded-lg hover:bg-[#DC2626]/90 transition-all"
+      >
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    @if (isLoading()) {
+      <div class="flex justify-center items-center h-64">
+        <svg class="animate-spin h-12 w-12 text-[#F59E0B]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+    } @else {
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <h3 class="text-[#A8A8A8] mb-2">Reservas</h3>
+          <p class="text-4xl text-[#F59E0B]">{{ reservas().length }}</p>
+        </div>
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <h3 class="text-[#A8A8A8] mb-2">Platos en Menú</h3>
+          <p class="text-4xl text-[#F59E0B]">{{ menuItems().length }}</p>
+        </div>
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <h3 class="text-[#A8A8A8] mb-2">Eventos</h3>
+          <p class="text-4xl text-[#F59E0B]">{{ eventos().length }}</p>
+        </div>
+      </div>
+
+      <!-- Management Sections -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Reservas -->
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+              Gestión de Reservas
+            </h2>
+            <button
+              (click)="navigateTo('reservas')"
+              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+            >
+              Gestionar
+            </button>
+          </div>
+          <p class="text-[#A8A8A8] text-sm">
+            {{ reservas().length }} reservas registradas
+          </p>
+        </div>
+
+        <!-- Menú -->
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+              Gestión de Menú
+            </h2>
+            <button
+              (click)="navigateTo('menu')"
+              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+            >
+              Gestionar
+            </button>
+          </div>
+          <p class="text-[#A8A8A8] text-sm">
+            {{ menuItems().length }} platos disponibles
+          </p>
+        </div>
+
+        <!-- Categorías -->
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+              Gestión de Categorías
+            </h2>
+            <button
+              (click)="navigateTo('categorias')"
+              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+            >
+              Gestionar
+            </button>
+          </div>
+          <p class="text-[#A8A8A8] text-sm">
+            Administrar categorías del menú
+          </p>
+        </div>
+
+        <!-- Eventos -->
+        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+              Gestión de Eventos
+            </h2>
+            <button
+              (click)="navigateTo('eventos')"
+              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+            >
+              Gestionar
+            </button>
+          </div>
+          <p class="text-[#A8A8A8] text-sm">
+            {{ eventos().length }} eventos activos
+          </p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

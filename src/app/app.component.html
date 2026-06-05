@@ -1,0 +1,97 @@
+<div class="min-h-screen bg-[#121212] text-[#F5F5F4]">
+
+  <!-- Toast notifications -->
+  <app-toast />
+
+  <!-- ─── Navigation Bar ─────────────────────────────────────────── -->
+  <nav class="fixed top-0 left-0 right-0 bg-[#1E1E1E]/95 backdrop-blur-sm border-b border-[#F5F5F4]/10 z-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <a
+          (click)="navigateTo('/')"
+          class="relative hover:opacity-80 transition-opacity z-50 flex-shrink-0 cursor-pointer"
+          [class]="isScrolled() ? 'transform-none' : 'transform translate-y-1/2'"
+          aria-label="Sargento Pimienta 2.0 - Inicio"
+        >
+          <img
+            src="assets/sargento-pimienta-logo.png"
+            alt="Sargento Pimienta 2.0"
+            [class]="isScrolled() ? 'h-10 w-auto' : 'h-24 w-auto'"
+            class="transition-all duration-300"
+            onerror="this.src='https://raw.githubusercontent.com/google/material-design-icons/master/png/places/restaurant/materialicons/48dp/2x/baseline_restaurant_black_48dp.png'"
+          />
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex gap-2">
+          @for (item of navItems; track item.path) {
+            <a
+              (click)="navigateTo(item.path)"
+              [class]="router.url === item.path ? 'bg-[#F59E0B] text-[#121212]' : ''"
+              class="flex items-center gap-2 px-4 py-2 rounded-lg transition-all hover:bg-[#2A2A2A] cursor-pointer"
+            >
+              <!-- Icon via inline SVG helper -->
+              <ng-container [ngSwitch]="item.icon">
+                <svg *ngSwitchCase="'home'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg *ngSwitchCase="'utensils-crossed'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>
+                <svg *ngSwitchCase="'calendar'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <svg *ngSwitchCase="'mail'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </ng-container>
+              {{ item.label }}
+            </a>
+          }
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button
+          (click)="toggleMobileMenu()"
+          class="md:hidden p-2 hover:bg-[#2A2A2A] rounded-lg transition-colors"
+          [attr.aria-label]="mobileMenuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+          [attr.aria-expanded]="mobileMenuOpen()"
+        >
+          @if (mobileMenuOpen()) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+      </div>
+
+      <!-- Mobile Navigation Dropdown -->
+      @if (mobileMenuOpen()) {
+        <div class="md:hidden py-4 border-t border-[#F5F5F4]/10">
+          @for (item of navItems; track item.path) {
+            <a
+              (click)="navigateTo(item.path)"
+              [class]="router.url === item.path ? 'bg-[#F59E0B] text-[#121212]' : ''"
+              class="w-full flex items-center justify-end gap-3 px-4 py-3 rounded-lg transition-all mb-2 hover:bg-[#2A2A2A] cursor-pointer"
+            >
+              {{ item.label }}
+              <ng-container [ngSwitch]="item.icon">
+                <svg *ngSwitchCase="'home'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg *ngSwitchCase="'utensils-crossed'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>
+                <svg *ngSwitchCase="'calendar'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <svg *ngSwitchCase="'mail'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              </ng-container>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </nav>
+
+  <!-- ─── Page Content ───────────────────────────────────────────── -->
+  <main class="pt-28">
+    <router-outlet />
+  </main>
+
+  <!-- ─── Footer ────────────────────────────────────────────────── -->
+  <footer class="bg-[#1E1E1E] border-t border-[#F5F5F4]/10 py-8 px-4 text-center">
+    <p class="text-[#A8A8A8]">
+      © 2026 Sargento Pimienta 2.0. Donde la música y el sabor se encuentran.
+    </p>
+  </footer>
+
+</div>
