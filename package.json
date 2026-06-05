@@ -5,7 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "npx ng build",
-    "watch": "npx ng build --watch --configuration development"
+    "watch": "npx ng build --watch --configuration development",
+    "postinstall": "chmod +x node_modules/.bin/* || true"
   },
   "private": true,
   "dependencies": {
