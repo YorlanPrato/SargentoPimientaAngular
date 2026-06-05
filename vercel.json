@@ -1,6 +1,6 @@
 {
   "buildCommand": "node node_modules/@angular/cli/bin/ng build",
-  "outputDirectory": "dist/sargento-pimienta-angular",
+  "outputDirectory": "dist/sargento-pimienta",
   "devCommand": "node node_modules/@angular/cli/bin/ng serve",
   "installCommand": "npm install"
 }
