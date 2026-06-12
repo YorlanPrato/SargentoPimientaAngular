@@ -223,19 +223,35 @@
 
     </div>
 
-    <!-- ─── Map placeholder ──────────────────────────────────────────── -->
+    <!-- ─── Mapa de Google Maps ──────────────────────────────────────────── -->
     <div class="mt-16">
-      <div class="bg-[#2A2A2A] rounded-2xl overflow-hidden h-96 flex items-center justify-center text-[#A8A8A8]">
-        <div class="text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-[#F59E0B] mx-auto mb-4"
-               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+      <div class="bg-[#2A2A2A] rounded-2xl overflow-hidden h-96">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.1604961012517!2d-72.21940649999999!3d7.772800000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e666c966e37280d%3A0x1a7b8fe4c4bf36e!2sSargento%20Pimienta!5e0!3m2!1ses!2sve!4v1781305310648!5m2!1ses!2sve"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Ubicación de Sargento Pimienta"
+        ></iframe>
+      </div>
+      <div class="mt-4 text-center">
+        <a
+          href="https://maps.app.goo.gl/jfJ9188smaRwJPgV7"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-[#F59E0B] hover:text-[#F59E0B]/80 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
           </svg>
-          <p class="text-lg">Mapa interactivo</p>
-          <p class="text-sm">Calle 14 entre carrera 20 y 21, Barrio Obrero</p>
-          <p class="text-sm">San Cristóbal, Táchira</p>
-        </div>
+          Abrir en Google Maps
+        </a>
       </div>
     </div>
 
