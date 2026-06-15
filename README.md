@@ -1,5 +1,6 @@
-# Sargento Pimienta 2.0 — Angular + Tailwind CSS
+# Web Sargento Pimienta 2.0 — Angular + Tailwind CSS
 
+```
 sargento-pimienta-angular/
 ├── .angular/
 ├── .env
