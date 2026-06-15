@@ -155,6 +155,15 @@
         </select>
       </div>
 
+      <!-- reCAPTCHA -->
+      <div>
+        <div sc-checkbox-re-captcha
+             [callback]="onRecaptchaResolved"
+             [error-callback]="onRecaptchaError"
+             class="flex justify-center"
+        ></div>
+      </div>
+
       <!-- Submit -->
       <button
         type="submit"

@@ -1,6 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ScCheckboxReCaptcha } from '@semantic-components/re-captcha';
 import { ToastService } from '../../services/toast.service';
 import { SupabaseService } from '../../services/supabase.service';
 import { OPERATING_HOURS } from '../../models/data';
@@ -11,7 +12,7 @@ type NationalityType = 'V' | 'E';
 @Component({
   selector: 'app-reservation',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ScCheckboxReCaptcha],
   templateUrl: './reservation.component.html',
 })
 export class ReservationComponent {
@@ -29,6 +30,7 @@ export class ReservationComponent {
   guests      = signal(2);
   selectedDate = signal('');
   selectedTime = signal('');
+  recaptchaToken = signal('');
 
   formatTo12Hour(time24: string): string {
     const [hours, minutes] = time24.split(':');
@@ -69,6 +71,15 @@ export class ReservationComponent {
     this.guests.set(n);
   }
 
+  onRecaptchaResolved(token: string | null): void {
+    this.recaptchaToken.set(token || '');
+  }
+
+  onRecaptchaError(): void {
+    this.recaptchaToken.set('');
+    this.toast.error('Error de verificación', 'Por favor completa el reCAPTCHA');
+  }
+
   handleSubmit(event: Event): void {
     event.preventDefault();
 
@@ -79,6 +90,11 @@ export class ReservationComponent {
 
     if (this.phone().length < 10) {
       this.toast.error('Teléfono inválido', 'El teléfono debe tener al menos 10 dígitos');
+      return;
+    }
+
+    if (!this.recaptchaToken()) {
+      this.toast.error('Verificación requerida', 'Por favor completa el reCAPTCHA');
       return;
     }
 
