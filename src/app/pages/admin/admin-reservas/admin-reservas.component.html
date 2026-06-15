@@ -38,6 +38,7 @@
               <th class="px-6 py-3 text-left text-[#F5F5F4]">Fecha</th>
               <th class="px-6 py-3 text-left text-[#F5F5F4]">Hora</th>
               <th class="px-6 py-3 text-left text-[#F5F5F4]">Comensales</th>
+              <th class="px-6 py-3 text-left text-[#F5F5F4]">Mesa</th>
               <th class="px-6 py-3 text-left text-[#F5F5F4]">Estado</th>
               <th class="px-6 py-3 text-left text-[#F5F5F4]">Acciones</th>
             </tr>
@@ -95,6 +96,14 @@
                     />
                   </td>
                   <td class="px-6 py-4">
+                    <input
+                      type="number"
+                      [value]="editingReserva()!.numero_mesa"
+                      (input)="editingReserva()!.numero_mesa = parseInt($any($event.target).value)"
+                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                    />
+                  </td>
+                  <td class="px-6 py-4">
                     <select
                       [value]="editingReserva()!.estado"
                       (change)="editingReserva()!.estado = $any($event.target).value"
@@ -103,7 +112,6 @@
                       <option value="pendiente">Pendiente</option>
                       <option value="confirmada">Confirmada</option>
                       <option value="cancelada">Cancelada</option>
-                      <option value="completada">Completada</option>
                     </select>
                   </td>
                   <td class="px-6 py-4">
@@ -131,12 +139,12 @@
                   <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.fecha }}</td>
                   <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.hora }}</td>
                   <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.comensales }}</td>
+                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.numero_mesa || '-' }}</td>
                   <td class="px-6 py-4">
                     <span
                       class="px-3 py-1 rounded-full text-sm"
                       [class]="reserva.estado === 'confirmada' ? 'bg-[#4ADE80] text-[#121212]' :
                                reserva.estado === 'cancelada' ? 'bg-[#DC2626] text-white' :
-                               reserva.estado === 'completada' ? 'bg-[#F59E0B] text-[#121212]' :
                                'bg-[#A8A8A8] text-[#121212]'"
                     >
                       {{ reserva.estado }}
