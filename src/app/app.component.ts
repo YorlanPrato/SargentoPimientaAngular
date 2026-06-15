@@ -20,6 +20,7 @@ export class AppComponent {
 
   mobileMenuOpen = signal(false);
   isScrolled = signal(false);
+  isAdminRoute = computed(() => this.router.url.startsWith('/admin'));
 
   readonly navItems: NavItem[] = [
     { path: '/',        label: 'Inicio',   icon: 'home' },
