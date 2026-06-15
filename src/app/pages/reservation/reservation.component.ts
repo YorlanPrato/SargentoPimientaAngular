@@ -27,7 +27,7 @@ export class ReservationComponent implements AfterViewInit {
   idNumber    = signal('');
   fullName    = signal('');
   phone       = signal('');
-  guests      = signal(2);
+  guests      = signal<number | null>(null);
   selectedDate = signal('');
   selectedTime = signal('');
   selectedTable = signal<number | null>(null);
@@ -91,24 +91,30 @@ export class ReservationComponent implements AfterViewInit {
 
   loadRecaptchaScript(): void {
     const script = document.createElement('script');
-    script.src = `https://www.google.com/recaptcha/api.js`;
+    script.src = `https://www.google.com/recaptcha/api.js?render=explicit`;
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      this.renderRecaptcha();
+      setTimeout(() => this.renderRecaptcha(), 500);
     };
     document.head.appendChild(script);
   }
 
   renderRecaptcha(): void {
     const container = document.getElementById('recaptcha-container');
-    if (container && (window as any).grecaptcha) {
-      (window as any).grecaptcha.render(container, {
-        sitekey: this.recaptchaSiteKey,
-        callback: (token: string) => this.onRecaptchaResolved(token),
-        'error-callback': () => this.onRecaptchaError(),
-        'expired-callback': () => this.onRecaptchaError()
-      });
+    if (container && (window as any).grecaptcha && (window as any).grecaptcha.render) {
+      try {
+        (window as any).grecaptcha.render(container, {
+          sitekey: this.recaptchaSiteKey,
+          callback: (token: string) => this.onRecaptchaResolved(token),
+          'error-callback': () => this.onRecaptchaError(),
+          'expired-callback': () => this.onRecaptchaError()
+        });
+      } catch (error) {
+        console.error('Error rendering reCAPTCHA:', error);
+      }
+    } else {
+      console.error('grecaptcha not available or render function not found');
     }
   }
 
@@ -153,6 +159,11 @@ export class ReservationComponent implements AfterViewInit {
       return;
     }
 
+    if (!this.guests()) {
+      this.toast.error('Comensales requeridos', 'Por favor selecciona el número de comensales');
+      return;
+    }
+
     if (!this.recaptchaToken()) {
       this.toast.error('Verificación requerida', 'Por favor completa el reCAPTCHA');
       return;
@@ -169,7 +180,7 @@ export class ReservationComponent implements AfterViewInit {
       telefono: this.phone(),
       fecha: this.selectedDate(),
       hora: this.selectedTime(),
-      comensales: this.guests(),
+      comensales: this.guests()!,
       estado: 'pendiente',
       numero_mesa: this.selectedTable()!
     };
@@ -190,7 +201,7 @@ export class ReservationComponent implements AfterViewInit {
       this.idNumber.set('');
       this.fullName.set('');
       this.phone.set('');
-      this.guests.set(2);
+      this.guests.set(null);
       this.selectedDate.set('');
       this.selectedTime.set('');
       this.selectedTable.set(null);
