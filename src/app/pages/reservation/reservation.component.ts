@@ -1,7 +1,6 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ScCheckboxReCaptcha } from '@semantic-components/re-captcha';
 import { ToastService } from '../../services/toast.service';
 import { SupabaseService } from '../../services/supabase.service';
 import { OPERATING_HOURS } from '../../models/data';
@@ -12,10 +11,10 @@ type NationalityType = 'V' | 'E';
 @Component({
   selector: 'app-reservation',
   standalone: true,
-  imports: [FormsModule, CommonModule, ScCheckboxReCaptcha],
+  imports: [FormsModule, CommonModule],
   templateUrl: './reservation.component.html',
 })
-export class ReservationComponent {
+export class ReservationComponent implements AfterViewInit {
   private toast = inject(ToastService);
   private supabase = inject(SupabaseService);
 
@@ -34,6 +33,7 @@ export class ReservationComponent {
   selectedTable = signal<number | null>(null);
   availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   recaptchaToken = signal('');
+  recaptchaSiteKey = (import.meta as any).env?.['RECAPTCHA_SITE_KEY'] || '6LcaeCAtAAAAAJITlUfGGbA1M5F-V0WI4tutTyN0';
 
   formatTo12Hour(time24: string): string {
     const [hours, minutes] = time24.split(':');
@@ -76,8 +76,8 @@ export class ReservationComponent {
     this.guests.set(n);
   }
 
-  onRecaptchaResolved(token: string | null): void {
-    this.recaptchaToken.set(token || '');
+  onRecaptchaResolved(token: string): void {
+    this.recaptchaToken.set(token);
   }
 
   onRecaptchaError(): void {
@@ -85,12 +85,39 @@ export class ReservationComponent {
     this.toast.error('Error de verificación', 'Por favor completa el reCAPTCHA');
   }
 
+  ngAfterViewInit(): void {
+    this.loadRecaptchaScript();
+  }
+
+  loadRecaptchaScript(): void {
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      this.renderRecaptcha();
+    };
+    document.head.appendChild(script);
+  }
+
+  renderRecaptcha(): void {
+    const container = document.getElementById('recaptcha-container');
+    if (container && (window as any).grecaptcha) {
+      (window as any).grecaptcha.render(container, {
+        sitekey: this.recaptchaSiteKey,
+        callback: (token: string) => this.onRecaptchaResolved(token),
+        'error-callback': () => this.onRecaptchaError(),
+        'expired-callback': () => this.onRecaptchaError()
+      });
+    }
+  }
+
   setTable(n: number): void {
     this.selectedTable.set(n);
   }
 
   async loadAvailableTables(): Promise<void> {
-    if (!this.selectedDate() || !this.selectedTime()) {
+    if (!this.selectedDate()) {
       this.availableTables.set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
       return;
     }
@@ -102,7 +129,7 @@ export class ReservationComponent {
     }
 
     const occupiedTables = reservas
-      .filter(r => r.fecha === this.selectedDate() && r.hora === this.selectedTime() && r.numero_mesa)
+      .filter(r => r.fecha === this.selectedDate() && r.numero_mesa)
       .map(r => r.numero_mesa!);
 
     const available = this.tableOptions.filter(table => !occupiedTables.includes(table));
