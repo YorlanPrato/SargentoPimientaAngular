@@ -7,6 +7,7 @@ export interface Reserva {
   hora: string;
   comensales: number;
   estado: string;
+  numero_mesa?: number;
   creado_en?: string;
 }
 

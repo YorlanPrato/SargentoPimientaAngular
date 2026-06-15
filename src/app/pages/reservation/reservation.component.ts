@@ -21,6 +21,7 @@ export class ReservationComponent {
 
   readonly operatingHours = OPERATING_HOURS;
   readonly guestOptions = [1, 2, 3, 4, 5];
+  readonly tableOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   readonly today = new Date().toISOString().split('T')[0];
 
   nationality = signal<NationalityType>('V');
@@ -30,6 +31,8 @@ export class ReservationComponent {
   guests      = signal(2);
   selectedDate = signal('');
   selectedTime = signal('');
+  selectedTable = signal<number | null>(null);
+  availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   recaptchaToken = signal('');
 
   formatTo12Hour(time24: string): string {
@@ -57,10 +60,12 @@ export class ReservationComponent {
 
   onDateChange(event: Event): void {
     this.selectedDate.set((event.target as HTMLInputElement).value);
+    this.loadAvailableTables();
   }
 
   onTimeChange(event: Event): void {
     this.selectedTime.set((event.target as HTMLSelectElement).value);
+    this.loadAvailableTables();
   }
 
   onNameChange(event: Event): void {
@@ -78,6 +83,34 @@ export class ReservationComponent {
   onRecaptchaError(): void {
     this.recaptchaToken.set('');
     this.toast.error('Error de verificación', 'Por favor completa el reCAPTCHA');
+  }
+
+  setTable(n: number): void {
+    this.selectedTable.set(n);
+  }
+
+  async loadAvailableTables(): Promise<void> {
+    if (!this.selectedDate() || !this.selectedTime()) {
+      this.availableTables.set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      return;
+    }
+
+    const { data: reservas, error } = await this.supabase.getReservas();
+    if (error) {
+      this.toast.error('Error al cargar mesas', error.message);
+      return;
+    }
+
+    const occupiedTables = reservas
+      .filter(r => r.fecha === this.selectedDate() && r.hora === this.selectedTime() && r.numero_mesa)
+      .map(r => r.numero_mesa!);
+
+    const available = this.tableOptions.filter(table => !occupiedTables.includes(table));
+    this.availableTables.set(available);
+
+    if (this.selectedTable() && !available.includes(this.selectedTable()!)) {
+      this.selectedTable.set(null);
+    }
   }
 
   handleSubmit(event: Event): void {
@@ -98,6 +131,11 @@ export class ReservationComponent {
       return;
     }
 
+    if (!this.selectedTable()) {
+      this.toast.error('Mesa requerida', 'Por favor selecciona una mesa');
+      return;
+    }
+
     const reserva: Reserva = {
       cedula: `${this.nationality()}-${this.idNumber()}`,
       nombre_cliente: this.fullName(),
@@ -105,7 +143,8 @@ export class ReservationComponent {
       fecha: this.selectedDate(),
       hora: this.selectedTime(),
       comensales: this.guests(),
-      estado: 'pendiente'
+      estado: 'pendiente',
+      numero_mesa: this.selectedTable()!
     };
 
     this.supabase.createReserva(reserva).then(({ error }) => {
@@ -127,6 +166,8 @@ export class ReservationComponent {
       this.guests.set(2);
       this.selectedDate.set('');
       this.selectedTime.set('');
+      this.selectedTable.set(null);
+      this.availableTables.set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     });
   }
 }

@@ -56,7 +56,8 @@ export class AdminReservasComponent implements OnInit {
       fecha: reserva.fecha,
       hora: reserva.hora,
       comensales: reserva.comensales,
-      estado: reserva.estado
+      estado: reserva.estado,
+      numero_mesa: reserva.numero_mesa
     });
 
     if (error) {
