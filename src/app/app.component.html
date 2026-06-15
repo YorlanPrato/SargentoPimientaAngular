@@ -12,13 +12,13 @@
         <a
           (click)="navigateTo('/')"
           class="relative hover:opacity-80 transition-opacity z-50 flex-shrink-0 cursor-pointer"
-          [class]="isScrolled() ? 'transform-none' : 'transform translate-y-1/2'"
+          [class]="isAdminRoute() || isScrolled() ? 'transform-none' : 'transform translate-y-1/2'"
           aria-label="Sargento Pimienta 2.0 - Inicio"
         >
           <img
             src="assets/sargento-pimienta-logo.png"
             alt="Sargento Pimienta 2.0"
-            [class]="isScrolled() ? 'h-10 w-auto' : 'h-24 w-auto'"
+            [class]="isAdminRoute() || isScrolled() ? 'h-10 w-auto' : 'h-24 w-auto'"
             class="transition-all duration-300"
             onerror="this.src='https://raw.githubusercontent.com/google/material-design-icons/master/png/places/restaurant/materialicons/48dp/2x/baseline_restaurant_black_48dp.png'"
           />
