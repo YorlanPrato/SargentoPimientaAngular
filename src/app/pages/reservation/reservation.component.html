@@ -155,6 +155,16 @@
         </select>
       </div>
 
+      <!-- reCAPTCHA -->
+      <div>
+        <re-captcha
+          [siteKey]="recaptchaSiteKey"
+          (resolved)="onRecaptchaResolved($event)"
+          (error)="onRecaptchaError()"
+          class="flex justify-center"
+        ></re-captcha>
+      </div>
+
       <!-- Submit -->
       <button
         type="submit"
