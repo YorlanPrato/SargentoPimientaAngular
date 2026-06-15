@@ -157,12 +157,11 @@
 
       <!-- reCAPTCHA -->
       <div>
-        <re-captcha
-          [siteKey]="recaptchaSiteKey"
-          (resolved)="onRecaptchaResolved($event)"
-          (error)="onRecaptchaError()"
-          class="flex justify-center"
-        ></re-captcha>
+        <div sc-checkbox-re-captcha
+             [callback]="onRecaptchaResolved"
+             [error-callback]="onRecaptchaError"
+             class="flex justify-center"
+        ></div>
       </div>
 
       <!-- Submit -->

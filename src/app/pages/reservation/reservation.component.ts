@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RecaptchaModule } from 'ng-recaptcha';
+import { ScCheckboxReCaptcha } from '@semantic-components/re-captcha';
 import { ToastService } from '../../services/toast.service';
 import { SupabaseService } from '../../services/supabase.service';
 import { OPERATING_HOURS } from '../../models/data';
@@ -12,7 +12,7 @@ type NationalityType = 'V' | 'E';
 @Component({
   selector: 'app-reservation',
   standalone: true,
-  imports: [FormsModule, CommonModule, RecaptchaModule],
+  imports: [FormsModule, CommonModule, ScCheckboxReCaptcha],
   templateUrl: './reservation.component.html',
 })
 export class ReservationComponent {
@@ -31,7 +31,6 @@ export class ReservationComponent {
   selectedDate = signal('');
   selectedTime = signal('');
   recaptchaToken = signal('');
-  recaptchaSiteKey = (import.meta as any).env?.['RECAPTCHA_SITE_KEY'] || '6LcaeCAtAAAAAJITlUfGGbA1M5F-V0WI4tutTyN0';
 
   formatTo12Hour(time24: string): string {
     const [hours, minutes] = time24.split(':');
