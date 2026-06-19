@@ -26,7 +26,7 @@ export class AdminMenuComponent implements OnInit {
     nombre: '',
     descripcion: '',
     precio: 0,
-    categoria_id: 0,
+    categoria_id: '',
     disponible: true
   });
   selectedFile = signal<File | null>(null);
@@ -63,7 +63,7 @@ export class AdminMenuComponent implements OnInit {
       nombre: '',
       descripcion: '',
       precio: 0,
-      categoria_id: this.categorias()[0]?.id || 0,
+      categoria_id: this.categorias()[0]?.id || '',
       disponible: true
     });
   }
@@ -147,7 +147,7 @@ export class AdminMenuComponent implements OnInit {
     await this.loadData();
   }
 
-  async deleteItem(id: number): Promise<void> {
+  async deleteItem(id: string): Promise<void> {
     if (!confirm('¿Está seguro de eliminar este plato?')) return;
 
     const { error } = await this.supabase.deletePlato(id);
