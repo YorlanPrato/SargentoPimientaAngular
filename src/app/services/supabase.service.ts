@@ -44,11 +44,11 @@ export class SupabaseService {
     return await this.supabase.from('menu').insert(plato);
   }
 
-  async updatePlato(id: number, plato: any) {
+  async updatePlato(id: string, plato: any) {
     return await this.supabase.from('menu').update(plato).eq('id', id);
   }
 
-  async deletePlato(id: number) {
+  async deletePlato(id: string) {
     return await this.supabase.from('menu').delete().eq('id', id);
   }
 
@@ -61,11 +61,11 @@ export class SupabaseService {
     return await this.supabase.from('categorias').insert(categoria);
   }
 
-  async updateCategoria(id: number, categoria: any) {
+  async updateCategoria(id: string, categoria: any) {
     return await this.supabase.from('categorias').update(categoria).eq('id', id);
   }
 
-  async deleteCategoria(id: number) {
+  async deleteCategoria(id: string) {
     return await this.supabase.from('categorias').delete().eq('id', id);
   }
 

@@ -12,11 +12,11 @@ export interface Reserva {
 }
 
 export interface Menu {
-  id?: number;
+  id?: string;
   nombre: string;
   descripcion: string;
   precio: number;
-  categoria_id: number;
+  categoria_id: string;
   imagen_url?: string;
   disponible: boolean;
   creado_en?: string;
@@ -24,7 +24,7 @@ export interface Menu {
 }
 
 export interface Categoria {
-  id?: number;
+  id?: string;
   nombre: string;
   creado_en?: string;
 }

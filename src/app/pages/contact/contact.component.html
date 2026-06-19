@@ -130,129 +130,38 @@
         </div>
       </div>
 
-      <!-- ─── Contact Form ──────────────────────────────────────────── -->
+      <!-- ─── Mapa de Google Maps ──────────────────────────────────────────── -->
       <div>
-        <div class="bg-[#1E1E1E] rounded-2xl p-8 shadow-xl">
-          <h2 class="text-3xl mb-6" style="font-family:'Urbanist',sans-serif;font-weight:500">
-            Envíanos un Mensaje
-          </h2>
-
-          <form (submit)="handleSubmit($event)" class="space-y-6">
-
-            <!-- Nombre -->
-            <div>
-              <label for="name" class="block mb-2 text-sm">Nombre *</label>
-              <input
-                type="text"
-                id="name"
-                [value]="form().name"
-                (input)="updateField('name', $event)"
-                required
-                placeholder="Tu nombre completo"
-                class="w-full bg-[#2A2A2A] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                       focus:outline-none focus:border-[#F59E0B] transition-colors"
-              />
-            </div>
-
-            <!-- Email -->
-            <div>
-              <label for="email" class="block mb-2 text-sm">Email *</label>
-              <input
-                type="email"
-                id="email"
-                [value]="form().email"
-                (input)="updateField('email', $event)"
-                required
-                placeholder="tu@email.com"
-                class="w-full bg-[#2A2A2A] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                       focus:outline-none focus:border-[#F59E0B] transition-colors"
-              />
-            </div>
-
-            <!-- Teléfono -->
-            <div>
-              <label for="phone" class="block mb-2 text-sm">Teléfono</label>
-              <input
-                type="tel"
-                id="phone"
-                [value]="form().phone"
-                (input)="updateField('phone', $event)"
-                placeholder="(212) 555-1234"
-                class="w-full bg-[#2A2A2A] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                       focus:outline-none focus:border-[#F59E0B] transition-colors"
-              />
-            </div>
-
-            <!-- Mensaje -->
-            <div>
-              <label for="message" class="block mb-2 text-sm">Mensaje *</label>
-              <textarea
-                id="message"
-                [value]="form().message"
-                (input)="updateField('message', $event)"
-                required
-                rows="5"
-                placeholder="¿En qué podemos ayudarte?"
-                class="w-full bg-[#2A2A2A] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                       focus:outline-none focus:border-[#F59E0B] transition-colors resize-none"
-              ></textarea>
-            </div>
-
-            <!-- Submit -->
-            <button
-              type="submit"
-              [disabled]="isSubmitting()"
-              class="w-full bg-[#F59E0B] text-[#121212] px-6 py-4 rounded-lg
-                     hover:bg-[#F59E0B]/90 transition-all flex items-center justify-center
-                     gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-            >
-              @if (isSubmitting()) {
-                Enviando...
-              } @else {
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-                Enviar Mensaje
-              }
-            </button>
-
-          </form>
+        <div class="bg-[#2A2A2A] rounded-2xl overflow-hidden h-full min-h-[500px]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.1604961012517!2d-72.21940649999999!3d7.772800000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e666c966e37280d%3A0x1a7b8fe4c4bf36e!2sSargento%20Pimienta!5e0!3m2!1ses!2sve!4v1781305310648!5m2!1ses!2sve"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Ubicación de Sargento Pimienta"
+          ></iframe>
+        </div>
+        <div class="mt-4">
+          <a
+            href="https://maps.app.goo.gl/jfJ9188smaRwJPgV7"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-[#F59E0B] hover:text-[#F59E0B]/80 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Abrir en Google Maps
+          </a>
         </div>
       </div>
 
-    </div>
-
-    <!-- ─── Mapa de Google Maps ──────────────────────────────────────────── -->
-    <div class="mt-16">
-      <div class="bg-[#2A2A2A] rounded-2xl overflow-hidden h-96">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.1604961012517!2d-72.21940649999999!3d7.772800000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e666c966e37280d%3A0x1a7b8fe4c4bf36e!2sSargento%20Pimienta!5e0!3m2!1ses!2sve!4v1781305310648!5m2!1ses!2sve"
-          width="100%"
-          height="100%"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Ubicación de Sargento Pimienta"
-        ></iframe>
-      </div>
-      <div class="mt-4 text-center">
-        <a
-          href="https://maps.app.goo.gl/jfJ9188smaRwJPgV7"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 text-[#F59E0B] hover:text-[#F59E0B]/80 transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-            <polyline points="15 3 21 3 21 9"/>
-            <line x1="10" y1="14" x2="21" y2="3"/>
-          </svg>
-          Abrir en Google Maps
-        </a>
-      </div>
     </div>
 
   </div>

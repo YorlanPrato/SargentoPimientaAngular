@@ -56,11 +56,12 @@
           <div class="mb-4">
             <label class="block mb-2 text-[#F5F5F4]">Categoría</label>
             <select
-              [value]="editingItem()!.categoria_id"
-              (change)="editingItem()!.categoria_id = parseInt($any($event.target).value)"
+              [ngModel]="editingItem()!.categoria_id"
+              (ngModelChange)="editingItem()!.categoria_id = $event"
               class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
               required
             >
+              <option value="">Seleccione una categoría</option>
               @for (cat of categorias(); track cat.id) {
                 <option [value]="cat.id">{{ cat.nombre }}</option>
               }

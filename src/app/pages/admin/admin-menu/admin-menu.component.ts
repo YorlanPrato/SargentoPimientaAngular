@@ -26,7 +26,7 @@ export class AdminMenuComponent implements OnInit {
     nombre: '',
     descripcion: '',
     precio: 0,
-    categoria_id: 0,
+    categoria_id: '',
     disponible: true
   });
   selectedFile = signal<File | null>(null);
@@ -58,14 +58,20 @@ export class AdminMenuComponent implements OnInit {
   }
 
   startNew(): void {
+    console.log('=== START NEW ===');
+    console.log('Categorias disponibles:', this.categorias());
+    console.log('Primera categoria ID:', this.categorias()[0]?.id);
+
     this.isEditing.set(true);
     this.editingItem.set({
       nombre: '',
       descripcion: '',
       precio: 0,
-      categoria_id: this.categorias()[0]?.id || 0,
+      categoria_id: this.categorias()[0]?.id || '',
       disponible: true
     });
+
+    console.log('Editing item after startNew:', this.editingItem());
   }
 
   cancelEdit(): void {
@@ -97,6 +103,16 @@ export class AdminMenuComponent implements OnInit {
   async saveItem(): Promise<void> {
     const item = this.editingItem();
     if (!item) return;
+
+    console.log('=== SAVE ITEM ===');
+    console.log('Item:', item);
+    console.log('Categoria ID:', item.categoria_id);
+    console.log('Categoria ID type:', typeof item.categoria_id);
+
+    if (!item.categoria_id) {
+      this.toast.error('Error', 'Por favor selecciona una categoría');
+      return;
+    }
 
     this.isUploading.set(true);
 
@@ -147,7 +163,7 @@ export class AdminMenuComponent implements OnInit {
     await this.loadData();
   }
 
-  async deleteItem(id: number): Promise<void> {
+  async deleteItem(id: string): Promise<void> {
     if (!confirm('¿Está seguro de eliminar este plato?')) return;
 
     const { error } = await this.supabase.deletePlato(id);

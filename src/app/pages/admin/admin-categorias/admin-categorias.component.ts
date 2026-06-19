@@ -85,7 +85,7 @@ export class AdminCategoriasComponent implements OnInit {
     await this.loadData();
   }
 
-  async deleteItem(id: number): Promise<void> {
+  async deleteItem(id: string): Promise<void> {
     if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
 
     const { error } = await this.supabase.deleteCategoria(id);
