@@ -139,10 +139,9 @@
               type="button"
               (click)="setGuests(num)"
               class="w-12 h-12 rounded-lg transition-all border"
-              style="border-color: var(--border); background-color: var(--button-bg);"
-              [class]="guests() === num
-                ? 'bg-[#F59E0B] text-[#121212]'
-                : 'rounded-lg transition-all'"
+              [style.background-color]="guests() === num ? '#F59E0B' : 'var(--button-bg)'"
+              [style.color]="guests() === num ? '#121212' : 'var(--foreground)'"
+              style="border-color: var(--border);"
             >
               {{ num }}
             </button>
@@ -168,12 +167,11 @@
               (click)="setTable(table)"
               [disabled]="!availableTables().includes(table)"
               class="w-12 h-12 rounded-lg transition-all border"
-              style="border-color: var(--border); background-color: var(--button-bg);"
-              [class]="selectedTable() === table
-                ? 'bg-[#F59E0B] text-[#121212]'
-                : availableTables().includes(table)
-                  ? 'rounded-lg transition-all'
-                  : 'rounded-lg transition-all cursor-not-allowed opacity-50'"
+              [style.background-color]="selectedTable() === table ? '#F59E0B' : 'var(--button-bg)'"
+              [style.color]="selectedTable() === table ? '#121212' : 'var(--foreground)'"
+              style="border-color: var(--border);"
+              [class.opacity-50]="!availableTables().includes(table)"
+              [class.cursor-not-allowed]="!availableTables().includes(table)"
             >
               {{ table }}
             </button>
