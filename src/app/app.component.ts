@@ -1,7 +1,8 @@
 import { Component, signal, computed, inject, HostListener } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from './components/toast/toast.component';
+import { filter } from 'rxjs/operators';
 
 interface NavItem {
   path: string;
@@ -20,7 +21,11 @@ export class AppComponent {
 
   mobileMenuOpen = signal(false);
   isScrolled = signal(false);
-  isAdminRoute = computed(() => this.router.url.startsWith('/admin'));
+  currentUrl = signal(this.router.url);
+  isAdminRoute = computed(() => {
+    const url = this.currentUrl();
+    return url.startsWith('/admin');
+  });
 
   readonly navItems: NavItem[] = [
     { path: '/',        label: 'Inicio',   icon: 'home' },
@@ -28,6 +33,14 @@ export class AppComponent {
     { path: '/reservar',label: 'Reservar', icon: 'calendar' },
     { path: '/contacto',label: 'Contacto', icon: 'mail' },
   ];
+
+  constructor() {
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.currentUrl.set(event.url);
+    });
+  }
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen.update(v => !v);

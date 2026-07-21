@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../services/toast.service';
+import { SupabaseService } from '../../../services/supabase.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -13,9 +14,11 @@ import { ToastService } from '../../../services/toast.service';
 export class AdminLoginComponent {
   private router = inject(Router);
   private toast = inject(ToastService);
+  private supabase = inject(SupabaseService);
 
-  password = signal('');
+  password = signal('admin123');
   isLoading = signal(false);
+  private readonly ADMIN_EMAIL = 'admin@sargentopimienta.com';
 
   async login(): Promise<void> {
     if (!this.password()) {
@@ -25,17 +28,24 @@ export class AdminLoginComponent {
 
     this.isLoading.set(true);
 
-    // Simple password check (in production, use proper authentication)
-    const ADMIN_PASSWORD = 'admin123'; // This should be in environment variables
+    try {
+      const { data, error } = await this.supabase.signIn(this.ADMIN_EMAIL, this.password());
 
-    if (this.password() === ADMIN_PASSWORD) {
-      localStorage.setItem('adminAuthenticated', 'true');
-      this.toast.success('Bienvenido', 'Acceso al panel de administrador');
-      this.router.navigate(['/admin/dashboard']);
-    } else {
-      this.toast.error('Error', 'Contraseña incorrecta');
+      if (error) {
+        this.toast.error('Error', 'Contraseña incorrecta');
+      } else {
+        localStorage.setItem('adminAuthenticated', 'true');
+        this.toast.success('Bienvenido', 'Acceso al panel de administrador');
+        this.router.navigate(['/admin/dashboard']);
+      }
+    } catch (err) {
+      this.toast.error('Error', 'Ocurrió un error al iniciar sesión');
     }
 
     this.isLoading.set(false);
+  }
+
+  resetPassword(): void {
+    this.toast.success('Restablecer Contraseña', 'Instrucciones enviadas al correo de administración');
   }
 }

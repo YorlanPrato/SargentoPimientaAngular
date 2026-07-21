@@ -2,19 +2,26 @@
   <!-- Header -->
   <div class="bg-[#1E1E1E] border-b border-[#F5F5F4]/10">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <button
-        (click)="goBack()"
-        class="text-[#F5F5F4] hover:text-[#F59E0B] transition-all flex items-center gap-2"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="15 18 9 12 15 6"/>
-          <line x1="19" y1="6" x2="5" y2="6"/>
-        </svg>
-        Volver al Dashboard
-      </button>
-      <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
-        Gestión de Eventos
-      </h1>
+      <div class="flex items-center gap-4">
+        <img
+          src="assets/sargento-pimienta-logo.png"
+          alt="Sargento Pimienta 2.0"
+          class="h-10 w-auto"
+        />
+        <button
+          (click)="goBack()"
+          class="text-[#F5F5F4] hover:text-[#F59E0B] transition-all flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+            <line x1="19" y1="6" x2="5" y2="6"/>
+          </svg>
+          Volver al Dashboard
+        </button>
+        <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+          Gestión de Eventos
+        </h1>
+      </div>
     </div>
   </div>
 

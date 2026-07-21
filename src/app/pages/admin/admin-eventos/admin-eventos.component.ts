@@ -31,7 +31,8 @@ export class AdminEventosComponent implements OnInit {
   isUploading = signal(false);
 
   async ngOnInit(): Promise<void> {
-    if (!localStorage.getItem('adminAuthenticated')) {
+    const { data: { session } } = await this.supabase.getSession();
+    if (!session) {
       this.router.navigate(['/admin']);
       return;
     }

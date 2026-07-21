@@ -42,14 +42,14 @@ export const routes: Routes = [
       import('./pages/admin/admin-menu/admin-menu.component').then(m => m.AdminMenuComponent)
   },
   {
-    path: 'admin/categorias',
-    loadComponent: () =>
-      import('./pages/admin/admin-categorias/admin-categorias.component').then(m => m.AdminCategoriasComponent)
-  },
-  {
     path: 'admin/eventos',
     loadComponent: () =>
       import('./pages/admin/admin-eventos/admin-eventos.component').then(m => m.AdminEventosComponent)
+  },
+  {
+    path: 'admin/informacion',
+    loadComponent: () =>
+      import('./pages/admin/admin-informacion/admin-informacion.component').then(m => m.AdminInformacionComponent)
   },
   { path: '**', redirectTo: '' }
 ];
