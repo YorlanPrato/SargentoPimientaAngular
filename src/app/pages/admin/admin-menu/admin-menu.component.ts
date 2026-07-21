@@ -31,6 +31,9 @@ export class AdminMenuComponent implements OnInit {
   });
   selectedFile = signal<File | null>(null);
   isUploading = signal(false);
+  activeTab = signal<'platos' | 'categorias'>('platos');
+  isEditingCategoria = signal(false);
+  editingCategoria = signal<Categoria | null>(null);
 
   async ngOnInit(): Promise<void> {
     const { data: { session } } = await this.supabase.getSession();
@@ -178,6 +181,71 @@ export class AdminMenuComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/admin/dashboard']);
+  }
+
+  // Métodos para gestión de categorías
+  startNewCategoria(): void {
+    this.isEditingCategoria.set(true);
+    this.editingCategoria.set({
+      nombre: ''
+    });
+  }
+
+  startEditCategoria(categoria: Categoria): void {
+    this.isEditingCategoria.set(true);
+    this.editingCategoria.set({ ...categoria });
+  }
+
+  cancelEditCategoria(): void {
+    this.isEditingCategoria.set(false);
+    this.editingCategoria.set(null);
+  }
+
+  async saveCategoria(): Promise<void> {
+    const categoria = this.editingCategoria();
+    if (!categoria) return;
+
+    if (!categoria.nombre) {
+      this.toast.error('Error', 'Por favor ingresa un nombre');
+      return;
+    }
+
+    if (categoria.id) {
+      const { error } = await this.supabase.updateCategoria(categoria.id, {
+        nombre: categoria.nombre
+      });
+
+      if (error) {
+        this.toast.error('Error', error.message);
+      } else {
+        this.toast.success('Éxito', 'Categoría actualizada');
+      }
+    } else {
+      const { error } = await this.supabase.createCategoria({
+        nombre: categoria.nombre
+      });
+
+      if (error) {
+        this.toast.error('Error', error.message);
+      } else {
+        this.toast.success('Éxito', 'Categoría creada');
+      }
+    }
+
+    this.cancelEditCategoria();
+    await this.loadData();
+  }
+
+  async deleteCategoria(id: string): Promise<void> {
+    if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
+
+    const { error } = await this.supabase.deleteCategoria(id);
+    if (error) {
+      this.toast.error('Error', error.message);
+    } else {
+      this.toast.success('Éxito', 'Categoría eliminada');
+      await this.loadData();
+    }
   }
 
   parseFloat(value: string): number {

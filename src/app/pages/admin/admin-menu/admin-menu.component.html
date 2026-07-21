@@ -27,7 +27,26 @@
 
   <!-- Content -->
   <div class="max-w-7xl mx-auto px-4 py-8">
-    @if (isEditing()) {
+    <!-- Tabs -->
+    <div class="flex gap-4 mb-6">
+      <button
+        (click)="activeTab.set('platos')"
+        [class]="activeTab() === 'platos' ? 'bg-[#F59E0B] text-[#121212]' : 'bg-[#2A2A2A] text-[#F5F5F4]'"
+        class="px-6 py-2 rounded-lg transition-all"
+      >
+        Platos
+      </button>
+      <button
+        (click)="activeTab.set('categorias')"
+        [class]="activeTab() === 'categorias' ? 'bg-[#F59E0B] text-[#121212]' : 'bg-[#2A2A2A] text-[#F5F5F4]'"
+        class="px-6 py-2 rounded-lg transition-all"
+      >
+        Categorías
+      </button>
+    </div>
+
+    @if (activeTab() === 'platos') {
+      @if (isEditing()) {
       <!-- Edit/Create Form -->
       <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
         <h2 class="text-xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
@@ -199,6 +218,106 @@
           </div>
         }
       </div>
+    }
+    }
+
+    @if (activeTab() === 'categorias') {
+      @if (isEditingCategoria()) {
+        <!-- Edit/Create Categoria Form -->
+        <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
+          <h2 class="text-xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
+            @if (editingCategoria()?.id) {
+              Editar Categoría
+            } @else {
+              Nueva Categoría
+            }
+          </h2>
+          <form (ngSubmit)="saveCategoria()">
+            <div class="mb-4">
+              <label class="block mb-2 text-[#F5F5F4]">Nombre</label>
+              <input
+                type="text"
+                [value]="editingCategoria()!.nombre"
+                (input)="editingCategoria()!.nombre = $any($event.target).value"
+                class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+                required
+              />
+            </div>
+            <div class="flex gap-2">
+              <button
+                type="submit"
+                class="bg-[#4ADE80] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#4ADE80]/90 transition-all"
+              >
+                Guardar
+              </button>
+              <button
+                type="button"
+                (click)="cancelEditCategoria()"
+                class="bg-[#DC2626] text-white px-6 py-2 rounded-lg hover:bg-[#DC2626]/90 transition-all"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      @if (isLoading()) {
+        <div class="flex justify-center items-center h-64">
+          <svg class="animate-spin h-12 w-12 text-[#F59E0B]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+      } @else {
+        <div class="mb-4">
+          <button
+            (click)="startNewCategoria()"
+            class="bg-[#F59E0B] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+          >
+            + Nueva Categoría
+          </button>
+        </div>
+
+        <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 overflow-hidden">
+          <table class="w-full">
+            <thead class="bg-[#2A2A2A]">
+              <tr>
+                <th class="px-6 py-3 text-left text-[#F5F5F4]">Nombre</th>
+                <th class="px-6 py-3 text-left text-[#F5F5F4]">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cat of categorias(); track cat.id) {
+                <tr class="border-b border-[#F5F5F4]/10 hover:bg-[#2A2A2A]">
+                  <td class="px-6 py-4 text-[#F5F5F4]">{{ cat.nombre }}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex gap-2">
+                      <button
+                        (click)="startEditCategoria(cat)"
+                        class="bg-[#F59E0B] text-[#121212] px-3 py-1 rounded hover:bg-[#F59E0B]/90 transition-all"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        (click)="deleteCategoria(cat.id!)"
+                        class="bg-[#DC2626] text-white px-3 py-1 rounded hover:bg-[#DC2626]/90 transition-all"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          @if (categorias().length === 0) {
+            <div class="text-center py-8 text-[#A8A8A8]">
+              No hay categorías registradas
+            </div>
+          }
+        </div>
+      }
     }
   </div>
 </div>
