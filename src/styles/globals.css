@@ -12,10 +12,30 @@
   --card-foreground:    #F5F5F4;
   --muted:              #2A2A2A;
   --muted-foreground:   #A8A8A8;
+  --input:              #121212;
+  --button-bg:          #121212;
   --primary:            #F59E0B;
   --primary-foreground: #121212;
   --destructive:        #DC2626;
   --border:             rgba(245, 245, 244, 0.1);
+  --ring:               #F59E0B;
+  --radius:             0.5rem;
+}
+
+/* ─── Light Theme ─────────────────────────────────────────────────── */
+.light {
+  --background:         #F5F5F4;
+  --foreground:         #1E1E1E;
+  --card:               #E8E8E8;
+  --card-foreground:    #1E1E1E;
+  --muted:              #D9D9D9;
+  --muted-foreground:   #6B7280;
+  --input:              #FFFFFF;
+  --button-bg:          #FFFFFF;
+  --primary:            #F59E0B;
+  --primary-foreground: #FFFFFF;
+  --destructive:        #DC2626;
+  --border:             rgba(30, 30, 30, 0.15);
   --ring:               #F59E0B;
   --radius:             0.5rem;
 }
@@ -64,6 +84,12 @@
   /* Hide scrollbar for category tabs */
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Date picker icon color */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5) sepia(1) saturate(5) hue-rotate(10deg);
+    cursor: pointer;
+  }
 }
 
 /* ─── Toast notifications ────────────────────────────────────────── */

@@ -3,17 +3,27 @@
 
     <!-- Header -->
     <div class="text-center mb-16">
-      <h1 class="text-5xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">Contacto</h1>
-      <p class="text-[#A8A8A8] text-lg max-w-2xl mx-auto">
-        ¿Tienes alguna pregunta o comentario? Estamos aquí para ayudarte.
-        Contáctanos y te responderemos lo antes posible.
-      </p>
+      @if (contactoInfo().title) {
+        <h1 class="text-5xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">{{ contactoInfo().title }}</h1>
+      } @else {
+        <h1 class="text-5xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">Contacto</h1>
+      }
+      @if (contactoInfo().description) {
+        <p class="text-[#A8A8A8] text-lg max-w-2xl mx-auto">
+          {{ contactoInfo().description }}
+        </p>
+      } @else {
+        <p class="text-[#A8A8A8] text-lg max-w-2xl mx-auto">
+          ¿Tienes alguna pregunta o comentario? Estamos aquí para ayudarte.
+          Contáctanos y te responderemos lo antes posible.
+        </p>
+      }
     </div>
 
     <div class="grid md:grid-cols-2 gap-12">
 
       <!-- ─── Contact Info ─────────────────────────────────────────── -->
-      <div>
+      <div class="rounded-2xl p-8" style="background-color: var(--card); border: 1px solid var(--border);">
         <h2 class="text-3xl mb-8" style="font-family:'Urbanist',sans-serif;font-weight:500">
           Información de Contacto
         </h2>
@@ -23,8 +33,8 @@
           <!-- Dirección -->
           <div class="flex gap-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-[#F59E0B] rounded-lg flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#121212]" viewBox="0 0 24 24"
+              <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: var(--primary);">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" style="color: var(--primary-foreground);" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
                 </svg>
@@ -32,16 +42,20 @@
             </div>
             <div>
               <h3 class="mb-1" style="font-family:'Urbanist',sans-serif">Dirección</h3>
-              <p class="text-[#A8A8A8]">Calle 14 entre carrera 20 y 21</p>
-              <p class="text-[#A8A8A8]">Barrio Obrero, San Cristóbal, Táchira</p>
+              @if (contactoInfo().address) {
+                <p style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(contactoInfo().address)"></p>
+              } @else {
+                <p style="color: var(--muted-foreground);">Calle 14 entre carrera 20 y 21</p>
+                <p style="color: var(--muted-foreground);">Barrio Obrero, San Cristóbal, Táchira</p>
+              }
             </div>
           </div>
 
           <!-- Teléfono -->
           <div class="flex gap-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-[#F59E0B] rounded-lg flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#121212]" viewBox="0 0 24 24"
+              <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: var(--primary);">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" style="color: var(--primary-foreground);" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
@@ -49,15 +63,19 @@
             </div>
             <div>
               <h3 class="mb-1" style="font-family:'Urbanist',sans-serif">Teléfono</h3>
-              <p class="text-[#A8A8A8]">0276-3550841</p>
+              @if (contactoInfo().phone) {
+                <p style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(contactoInfo().phone)"></p>
+              } @else {
+                <p style="color: var(--muted-foreground);">0276-3550841</p>
+              }
             </div>
           </div>
 
           <!-- Email -->
           <div class="flex gap-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-[#F59E0B] rounded-lg flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#121212]" viewBox="0 0 24 24"
+              <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: var(--primary);">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" style="color: var(--primary-foreground);" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                 </svg>
@@ -65,16 +83,20 @@
             </div>
             <div>
               <h3 class="mb-1" style="font-family:'Urbanist',sans-serif">Email</h3>
-              <p class="text-[#A8A8A8]">info&#64;sargentopimienta.com</p>
-              <p class="text-[#A8A8A8]">reservas&#64;sargentopimienta.com</p>
+              @if (contactoInfo().email) {
+                <p style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(contactoInfo().email)"></p>
+              } @else {
+                <p style="color: var(--muted-foreground);">info&#64;sargentopimienta.com</p>
+                <p style="color: var(--muted-foreground);">reservas&#64;sargentopimienta.com</p>
+              }
             </div>
           </div>
 
           <!-- Horarios -->
           <div class="flex gap-4">
             <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-[#F59E0B] rounded-lg flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#121212]" viewBox="0 0 24 24"
+              <div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background-color: var(--primary);">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" style="color: var(--primary-foreground);" viewBox="0 0 24 24"
                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                 </svg>
@@ -82,8 +104,12 @@
             </div>
             <div>
               <h3 class="mb-1" style="font-family:'Urbanist',sans-serif">Horarios</h3>
-              <p class="text-[#A8A8A8]">Sábado - Jueves: 5:00 PM - 02:00 AM</p>
-              <p class="text-[#A8A8A8]">Domingo - Lunes: Cerrado</p>
+              @if (contactoInfo().hours) {
+                <p style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(contactoInfo().hours)"></p>
+              } @else {
+                <p style="color: var(--muted-foreground);">Sábado - Jueves: 5:00 PM - 02:00 AM</p>
+                <p style="color: var(--muted-foreground);">Domingo - Lunes: Cerrado</p>
+              }
             </div>
           </div>
 
@@ -95,44 +121,78 @@
           <div class="flex gap-4">
 
             <!-- Instagram -->
-            <a
-              href="https://www.instagram.com/sargentopimienta_sc/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-12 h-12 bg-[#2A2A2A] hover:bg-[#F59E0B] rounded-lg flex items-center justify-center transition-colors group"
-              aria-label="Instagram"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#F5F5F4] group-hover:text-[#121212] transition-colors"
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-              </svg>
-            </a>
+            @if (contactoInfo().instagram) {
+              <a
+                [href]="contactoInfo().instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-12 h-12 rounded-lg flex items-center justify-center transition-colors group" style="background-color: var(--muted);"
+                aria-label="Instagram"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transition-colors" style="color: var(--foreground);" viewBox="0 0 24 24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
+            } @else {
+              <a
+                href="https://www.instagram.com/sargentopimienta_sc/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-12 h-12 rounded-lg flex items-center justify-center transition-colors group" style="background-color: var(--muted);"
+                aria-label="Instagram"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transition-colors" style="color: var(--foreground);" viewBox="0 0 24 24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
+            }
 
             <!-- Facebook -->
-            <a
-              href="https://www.facebook.com/sargentopimientaSC/?locale=es_LA"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-12 h-12 bg-[#2A2A2A] hover:bg-[#F59E0B] rounded-lg flex items-center justify-center transition-colors group"
-              aria-label="Facebook"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#F5F5F4] group-hover:text-[#121212] transition-colors"
-                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-              </svg>
-            </a>
+            @if (contactoInfo().facebook) {
+              <a
+                [href]="contactoInfo().facebook"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-12 h-12 rounded-lg flex items-center justify-center transition-colors group" style="background-color: var(--muted);"
+                aria-label="Facebook"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transition-colors" style="color: var(--foreground);" viewBox="0 0 24 24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
+            } @else {
+              <a
+                href="https://www.facebook.com/sargentopimientaSC/?locale=es_LA"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-12 h-12 rounded-lg flex items-center justify-center transition-colors group" style="background-color: var(--muted);"
+                aria-label="Facebook"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transition-colors" style="color: var(--foreground);" viewBox="0 0 24 24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                </svg>
+              </a>
+            }
 
           </div>
         </div>
       </div>
 
       <!-- ─── Mapa de Google Maps ──────────────────────────────────────────── -->
-      <div>
-        <div class="bg-[#2A2A2A] rounded-2xl overflow-hidden h-full min-h-[500px]">
+      <div class="rounded-2xl overflow-hidden" style="background-color: var(--card); border: 1px solid var(--border);">
+        <div class="h-full min-h-[500px]">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.1604961012517!2d-72.21940649999999!3d7.772800000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e666c966e37280d%3A0x1a7b8fe4c4bf36e!2sSargento%20Pimienta!5e0!3m2!1ses!2sve!4v1781305310648!5m2!1ses!2sve"
             width="100%"

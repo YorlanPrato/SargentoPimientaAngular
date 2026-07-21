@@ -6,18 +6,18 @@
       <h2 class="text-4xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
         Reservar Mesa
       </h2>
-      <p class="text-[#A8A8A8]">
+      <p style="color: var(--muted-foreground);">
         Complete el formulario para asegurar su mesa en Sargento Pimienta 2.0
       </p>
     </div>
 
     <!-- Form -->
-    <form (submit)="handleSubmit($event)" class="bg-[#1E1E1E] rounded-lg p-8 space-y-6">
+    <form (submit)="handleSubmit($event)" class="rounded-lg p-8 space-y-6" style="background-color: var(--card);">
 
       <!-- Cédula -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="5" width="20" height="14" rx="2"/>
             <line x1="2" y1="10" x2="22" y2="10"/>
@@ -28,8 +28,7 @@
           <select
             [value]="nationality()"
             (change)="onNationalityChange($event)"
-            class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                   focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full sm:w-20"
+            class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full sm:w-20" style="background-color: var(--input); border: 1px solid var(--border);"
           >
             <option value="V">V</option>
             <option value="E">E</option>
@@ -40,8 +39,7 @@
             (input)="onIdChange($event)"
             placeholder="12345678"
             maxlength="9"
-            class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                   focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+            class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
           />
         </div>
       </div>
@@ -49,7 +47,7 @@
       <!-- Nombre -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
           </svg>
@@ -60,15 +58,14 @@
           [value]="fullName()"
           (input)="onNameChange($event)"
           placeholder="Ingrese su nombre completo"
-          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
       </div>
 
       <!-- Teléfono -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
           </svg>
@@ -79,15 +76,14 @@
           [value]="phone()"
           (input)="onPhoneChange($event)"
           placeholder="04241234567"
-          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
       </div>
 
       <!-- Fecha -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
             <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
@@ -100,15 +96,14 @@
           [value]="selectedDate()"
           (change)="onDateChange($event)"
           [min]="today"
-          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
       </div>
 
       <!-- Hora -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
           </svg>
@@ -117,8 +112,7 @@
         <select
           [value]="selectedTime()"
           (change)="onTimeChange($event)"
-          class="bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full"
+          class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         >
           <option value="">Seleccione una hora</option>
           @for (time of operatingHours; track time) {
@@ -130,7 +124,7 @@
       <!-- Comensales -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="9" cy="7" r="4"/>
@@ -144,10 +138,11 @@
             <button
               type="button"
               (click)="setGuests(num)"
-              class="w-12 h-12 rounded-lg transition-all"
+              class="w-12 h-12 rounded-lg transition-all border"
+              style="border-color: var(--border); background-color: var(--button-bg);"
               [class]="guests() === num
                 ? 'bg-[#F59E0B] text-[#121212]'
-                : 'bg-[#121212] text-[#F5F5F4] hover:bg-[#2A2A2A]'"
+                : 'rounded-lg transition-all'"
             >
               {{ num }}
             </button>
@@ -158,7 +153,7 @@
       <!-- Mesa -->
       <div>
         <label class="flex items-center gap-2 mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#F59E0B]" viewBox="0 0 24 24"
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--primary);" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="2"/>
             <path d="M3 9h18"/>
@@ -172,19 +167,20 @@
               type="button"
               (click)="setTable(table)"
               [disabled]="!availableTables().includes(table)"
-              class="w-12 h-12 rounded-lg transition-all"
+              class="w-12 h-12 rounded-lg transition-all border"
+              style="border-color: var(--border); background-color: var(--button-bg);"
               [class]="selectedTable() === table
                 ? 'bg-[#F59E0B] text-[#121212]'
                 : availableTables().includes(table)
-                  ? 'bg-[#121212] text-[#F5F5F4] hover:bg-[#2A2A2A]'
-                  : 'bg-[#2A2A2A] text-[#525252] cursor-not-allowed opacity-50'"
+                  ? 'rounded-lg transition-all'
+                  : 'rounded-lg transition-all cursor-not-allowed opacity-50'"
             >
               {{ table }}
             </button>
           }
         </div>
         @if (selectedDate() && selectedTime() && availableTables().length === 0) {
-          <p class="text-[#DC2626] text-sm mt-2">No hay mesas disponibles para esta fecha</p>
+          <p class="text-sm mt-2" style="color: var(--destructive);">No hay mesas disponibles para esta fecha</p>
         }
       </div>
 

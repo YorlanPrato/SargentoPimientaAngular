@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, HostListener } from '@angular/core
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from './components/toast/toast.component';
+import { ThemeService } from './services/theme.service';
 import { filter } from 'rxjs/operators';
 
 interface NavItem {
@@ -18,6 +19,7 @@ interface NavItem {
 })
 export class AppComponent {
   router = inject(Router);
+  private themeService = inject(ThemeService);
 
   mobileMenuOpen = signal(false);
   isScrolled = signal(false);
@@ -33,6 +35,14 @@ export class AppComponent {
     { path: '/reservar',label: 'Reservar', icon: 'calendar' },
     { path: '/contacto',label: 'Contacto', icon: 'mail' },
   ];
+
+  get isDarkMode() {
+    return this.themeService.isDarkMode();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
 
   constructor() {
     this.router.events.pipe(

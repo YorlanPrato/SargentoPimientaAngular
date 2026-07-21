@@ -22,12 +22,20 @@
           </svg>
 
           <h1 class="text-5xl md:text-6xl mb-4 tracking-tight"
-              style="font-family: 'Urbanist', sans-serif; font-weight: 500">
-            Sargento Pimienta 2.0
+              style="font-family: 'Urbanist', sans-serif; font-weight: 500; color: #F5F5F4;">
+            @if (inicioInfo().title) {
+              {{ inicioInfo().title }}
+            } @else {
+              Sargento Pimienta 2.0
+            }
           </h1>
 
-          <p class="text-xl md:text-2xl text-[#F5F5F4]/80 mb-8 max-w-2xl">
-            Donde la música se encuentra con la gastronomía excepcional
+          <p class="text-xl md:text-2xl mb-8 max-w-2xl" style="color: #F5F5F4; opacity: 0.8;">
+            @if (inicioInfo().subtitle) {
+              {{ inicioInfo().subtitle }}
+            } @else {
+              Donde la música se encuentra con la gastronomía excepcional
+            }
           </p>
 
           <button
@@ -56,7 +64,7 @@
   </div>
 
   <!-- ─── Info Section ──────────────────────────────────────────────── -->
-  <div class="bg-[#1E1E1E] py-16 px-4">
+  <div class="py-16 px-4" style="background-color: var(--card);">
     <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
 
       <!-- Horarios -->
@@ -67,8 +75,12 @@
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
         <h3 class="mb-2 text-xl" style="font-family: 'Urbanist', sans-serif">Horarios</h3>
-        <p class="text-[#A8A8A8]">Sábado - Jueves: 5:00 PM - 02:00 AM</p>
-        <p class="text-[#A8A8A8]">Domingo - Lunes: Cerrado</p>
+        @if (inicioInfo().hours) {
+          <p style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(inicioInfo().hours)"></p>
+        } @else {
+          <p style="color: var(--muted-foreground);">Sábado - Jueves: 5:00 PM - 02:00 AM</p>
+          <p style="color: var(--muted-foreground);">Domingo - Lunes: Cerrado</p>
+        }
       </div>
 
       <!-- Ubicación -->
@@ -79,8 +91,12 @@
           <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
         </svg>
         <h3 class="mb-2 text-xl" style="font-family: 'Urbanist', sans-serif">Ubicación</h3>
-        <p class="text-[#A8A8A8]">Calle 14 entre carrera 20 y 21</p>
-        <p class="text-[#A8A8A8]">Barrio Obrero, San Cristóbal, Táchira</p>
+        @if (inicioInfo().address) {
+          <p style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(inicioInfo().address)"></p>
+        } @else {
+          <p style="color: var(--muted-foreground);">Calle 14 entre carrera 20 y 21</p>
+          <p style="color: var(--muted-foreground);">Barrio Obrero, San Cristóbal, Táchira</p>
+        }
       </div>
 
       <!-- Instagram -->
@@ -93,14 +109,27 @@
           <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
         </svg>
         <h3 class="mb-2 text-xl" style="font-family: 'Urbanist', sans-serif">Instagram</h3>
-        <a
-          href="https://www.instagram.com/sargentopimienta_sc/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-[#A8A8A8] hover:text-[#F59E0B] transition-colors"
-        >
-          &#64;sargentopimienta_sc
-        </a>
+        @if (inicioInfo().instagram) {
+          <a
+            [href]="inicioInfo().instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-[#F59E0B] transition-colors"
+            style="color: var(--muted-foreground);"
+          >
+            {{ inicioInfo().instagram }}
+          </a>
+        } @else {
+          <a
+            href="https://www.instagram.com/sargentopimienta_sc/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-[#F59E0B] transition-colors"
+            style="color: var(--muted-foreground);"
+          >
+            &#64;sargentopimienta_sc
+          </a>
+        }
       </div>
 
     </div>
@@ -109,15 +138,19 @@
   <!-- ─── Atmosphere Section (Desktop only) ──────────────────────────── -->
   <div class="hidden md:block py-16 px-4">
     <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-4xl mb-6" style="font-family: 'Urbanist', sans-serif; font-weight: 500">
-        Una Experiencia Única
-      </h2>
-      <p class="text-[#A8A8A8] text-lg leading-relaxed">
-        Sumérgete en la atmósfera bohemia de nuestro bar-restaurante, donde cada noche
-        es una celebración del rock clásico y la cocina contemporánea. Desde los acordes
-        de las guitarras hasta los sabores exquisitos de nuestros platos, cada detalle
-        está diseñado para crear momentos inolvidables.
-      </p>
+      @if (inicioInfo().atmosphere) {
+        <p class="text-lg leading-relaxed" style="color: var(--muted-foreground);" [innerHTML]="formatPipeSeparated(inicioInfo().atmosphere)"></p>
+      } @else {
+        <h2 class="text-4xl mb-6" style="font-family: 'Urbanist', sans-serif; font-weight: 500">
+          Una Experiencia Única
+        </h2>
+        <p class="text-lg leading-relaxed" style="color: var(--muted-foreground);">
+          Sumérgete en la atmósfera bohemia de nuestro bar-restaurante, donde cada noche
+          es una celebración del rock clásico y la cocina contemporánea. Desde los acordes
+          de las guitarras hasta los sabores exquisitos de nuestros platos, cada detalle
+          está diseñado para crear momentos inolvidables.
+        </p>
+      }
     </div>
   </div>
 
