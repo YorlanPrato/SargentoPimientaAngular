@@ -1,6 +1,6 @@
-<div class="min-h-screen bg-[#121212]">
+<div class="min-h-screen" style="background-color: var(--background);">
   <!-- Header -->
-  <div class="bg-[#1E1E1E] border-b border-[#F5F5F4]/10">
+  <div class="border-b" style="background-color: var(--card); border-color: var(--border);">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center gap-4">
         <img
@@ -10,7 +10,7 @@
         />
         <button
           (click)="goBack()"
-          class="text-[#F5F5F4] hover:text-[#F59E0B] transition-all flex items-center gap-2"
+          class="hover:bg-[#F59E0B]/90 transition-all flex items-center gap-2 px-4 py-2 rounded-lg" style="background-color: #F59E0B; color: #121212;"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15 18 9 12 15 6"/>
@@ -28,25 +28,23 @@
   <!-- Content -->
   <div class="max-w-7xl mx-auto px-4 py-8">
     <!-- Configuration Buttons -->
-    <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
-      <div class="flex gap-4">
-        <button
-          (click)="openMaxGuestsConfig()"
-          class="flex-1 bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium"
-        >
-          Configurar Comensales Máximos
-        </button>
-        <button
-          (click)="openTablesConfig()"
-          class="flex-1 bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium"
-        >
-          Configurar Número de Mesas
-        </button>
-      </div>
+    <div class="flex gap-4 mb-6">
+      <button
+        (click)="openMaxGuestsConfig()"
+        class="flex-1 bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium"
+      >
+        Configurar Comensales Máximos
+      </button>
+      <button
+        (click)="openTablesConfig()"
+        class="flex-1 bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium"
+      >
+        Configurar Número de Mesas
+      </button>
     </div>
 
     @if (isConfiguring()) {
-      <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
+      <div class="rounded-lg border p-6 mb-6" style="background-color: var(--card); border-color: var(--border);">
         <h2 class="text-xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
           @if (configType() === 'guests') {
             Configurar Comensales Máximos
@@ -59,7 +57,7 @@
             type="number"
             [value]="configType() === 'guests' ? maxGuests() : numTables()"
             (input)="configType() === 'guests' ? maxGuests.set(parseInt($any($event.target).value)) : numTables.set(parseInt($any($event.target).value))"
-            class="flex-1 bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+            class="flex-1 rounded px-4 py-3" style="background-color: var(--background); border: 1px solid var(--border);"
             min="1"
           />
           <button
@@ -86,31 +84,31 @@
         </svg>
       </div>
     } @else {
-      <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 overflow-auto max-h-[600px]">
+      <div class="rounded-lg border overflow-auto max-h-[600px]" style="background-color: var(--card); border-color: var(--border);">
         <table class="w-full">
-          <thead class="bg-[#2A2A2A]">
+          <thead style="background-color: var(--muted);">
             <tr>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Cédula</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Nombre</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Teléfono</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Fecha</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Hora</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Comensales</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Mesa</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Estado</th>
-              <th class="px-6 py-3 text-left text-[#F5F5F4]">Acciones</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Cédula</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Nombre</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Teléfono</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Fecha</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Hora</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Comensales</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Mesa</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Estado</th>
+              <th class="px-6 py-3 text-left" style="color: var(--foreground);">Acciones</th>
             </tr>
           </thead>
           <tbody>
             @for (reserva of reservas(); track reserva.id) {
               @if (editingReserva()?.id === reserva.id) {
-                <tr class="border-b border-[#F5F5F4]/10">
+                <tr class="border-b" style="border-color: var(--border);">
                   <td class="px-6 py-4">
                     <input
                       type="text"
                       [value]="editingReserva()!.cedula"
                       disabled
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
@@ -118,7 +116,7 @@
                       type="text"
                       [value]="editingReserva()!.nombre_cliente"
                       (input)="editingReserva()!.nombre_cliente = $any($event.target).value"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
@@ -126,7 +124,7 @@
                       type="text"
                       [value]="editingReserva()!.telefono"
                       (input)="editingReserva()!.telefono = $any($event.target).value"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
@@ -134,7 +132,7 @@
                       type="date"
                       [value]="editingReserva()!.fecha"
                       (input)="editingReserva()!.fecha = $any($event.target).value"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
@@ -142,7 +140,7 @@
                       type="text"
                       [value]="editingReserva()!.hora"
                       (input)="editingReserva()!.hora = $any($event.target).value"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
@@ -150,7 +148,7 @@
                       type="number"
                       [value]="editingReserva()!.comensales"
                       (input)="editingReserva()!.comensales = parseInt($any($event.target).value)"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
@@ -158,14 +156,14 @@
                       type="number"
                       [value]="editingReserva()!.numero_mesa"
                       (input)="editingReserva()!.numero_mesa = parseInt($any($event.target).value)"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-24"
+                      class="rounded px-3 py-2 w-24" style="background-color: var(--background); border: 1px solid var(--border);"
                     />
                   </td>
                   <td class="px-6 py-4">
                     <select
                       [value]="editingReserva()!.estado"
                       (change)="editingReserva()!.estado = $any($event.target).value"
-                      class="bg-[#121212] border border-[#F5F5F4]/10 rounded px-3 py-2 w-full"
+                      class="rounded px-3 py-2 w-full" style="background-color: var(--background); border: 1px solid var(--border);"
                     >
                       <option value="pendiente">Pendiente</option>
                       <option value="confirmada">Confirmada</option>
@@ -190,14 +188,14 @@
                   </td>
                 </tr>
               } @else {
-                <tr class="border-b border-[#F5F5F4]/10 hover:bg-[#2A2A2A]">
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.cedula }}</td>
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.nombre_cliente }}</td>
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.telefono }}</td>
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.fecha }}</td>
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.hora }}</td>
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.comensales }}</td>
-                  <td class="px-6 py-4 text-[#F5F5F4]">{{ reserva.numero_mesa || '-' }}</td>
+                <tr class="border-b hover:bg-[var(--muted)]" style="border-color: var(--border);">
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.cedula }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.nombre_cliente }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.telefono }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.fecha }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.hora }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.comensales }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.numero_mesa || '-' }}</td>
                   <td class="px-6 py-4">
                     <span
                       class="px-3 py-1 rounded-full text-sm"
@@ -230,7 +228,7 @@
           </tbody>
         </table>
         @if (reservas().length === 0) {
-          <div class="text-center py-8 text-[#A8A8A8]">
+          <div class="text-center py-8" style="color: var(--muted-foreground);">
             No hay reservas registradas
           </div>
         }

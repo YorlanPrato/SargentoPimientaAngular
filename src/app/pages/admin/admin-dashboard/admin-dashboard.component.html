@@ -1,6 +1,6 @@
-<div class="min-h-screen bg-[#121212]">
+<div class="min-h-screen" style="background-color: var(--background);">
   <!-- Header -->
-  <div class="bg-[#1E1E1E] border-b border-[#F5F5F4]/10">
+  <div class="border-b" style="background-color: var(--card); border-color: var(--border);">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <div class="flex items-center gap-4">
         <img
@@ -12,12 +12,38 @@
           Panel de Administración
         </h1>
       </div>
-      <button
-        (click)="logout()"
-        class="bg-[#DC2626] text-white px-4 py-2 rounded-lg hover:bg-[#DC2626]/90 transition-all"
-      >
-        Cerrar Sesión
-      </button>
+      <div class="flex items-center gap-4">
+        <button
+          (click)="toggleTheme()"
+          class="rounded-lg p-2 transition-all"
+          style="background-color: var(--muted);"
+          aria-label="Cambiar tema"
+        >
+          @if (!isDarkMode) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" style="color: var(--foreground);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          }
+        </button>
+        <button
+          (click)="logout()"
+          class="rounded-lg hover:bg-[#DC2626]/90 transition-all px-6 py-3" style="background-color: var(--destructive); color: white;"
+        >
+          Cerrar Sesión
+        </button>
+      </div>
     </div>
   </div>
 
@@ -33,91 +59,91 @@
     } @else {
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
-          <h3 class="text-[#A8A8A8] mb-2">Reservas</h3>
-          <p class="text-4xl text-[#F59E0B]">{{ reservas().length }}</p>
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
+          <h3 class="mb-2" style="color: var(--muted-foreground);">Reservas</h3>
+          <p class="text-4xl" style="color: var(--primary);">{{ reservas().length }}</p>
         </div>
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
-          <h3 class="text-[#A8A8A8] mb-2">Platos en Menú</h3>
-          <p class="text-4xl text-[#F59E0B]">{{ menuItems().length }}</p>
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
+          <h3 class="mb-2" style="color: var(--muted-foreground);">Platos en Menú</h3>
+          <p class="text-4xl" style="color: var(--primary);">{{ menuItems().length }}</p>
         </div>
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
-          <h3 class="text-[#A8A8A8] mb-2">Eventos</h3>
-          <p class="text-4xl text-[#F59E0B]">{{ eventos().length }}</p>
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
+          <h3 class="mb-2" style="color: var(--muted-foreground);">Eventos</h3>
+          <p class="text-4xl" style="color: var(--primary);">{{ eventos().length }}</p>
         </div>
       </div>
 
       <!-- Management Sections -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Reservas -->
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Reservas
             </h2>
             <button
               (click)="navigateTo('reservas')"
-              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
             >
               Gestionar
             </button>
           </div>
-          <p class="text-[#A8A8A8] text-sm">
+          <p class="text-sm" style="color: var(--muted-foreground);">
             {{ reservas().length }} reservas registradas
           </p>
         </div>
 
         <!-- Menú -->
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Menú
             </h2>
             <button
               (click)="navigateTo('menu')"
-              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
             >
               Gestionar
             </button>
           </div>
-          <p class="text-[#A8A8A8] text-sm">
+          <p class="text-sm" style="color: var(--muted-foreground);">
             {{ menuItems().length }} platos disponibles
           </p>
         </div>
 
         <!-- Eventos -->
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Eventos
             </h2>
             <button
               (click)="navigateTo('eventos')"
-              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
             >
               Gestionar
             </button>
           </div>
-          <p class="text-[#A8A8A8] text-sm">
+          <p class="text-sm" style="color: var(--muted-foreground);">
             {{ eventos().length }} eventos activos
           </p>
         </div>
 
         <!-- Información -->
-        <div class="bg-[#1E1E1E] rounded-lg p-6 border border-[#F5F5F4]/10">
+        <div class="rounded-lg p-6" style="background-color: var(--card); border: 1px solid var(--border);">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Información
             </h2>
             <button
               (click)="navigateTo('informacion')"
-              class="bg-[#F59E0B] text-[#121212] px-4 py-2 rounded-lg hover:bg-[#F59E0B]/90 transition-all"
+              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
             >
               Gestionar
             </button>
           </div>
-          <p class="text-[#A8A8A8] text-sm">
-            Editar textos de Inicio y Contacto
+          <p class="text-sm" style="color: var(--muted-foreground);">
+            Editar información general del Sitio Web
           </p>
         </div>
       </div>

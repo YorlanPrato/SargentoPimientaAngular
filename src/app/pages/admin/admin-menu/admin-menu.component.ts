@@ -11,6 +11,7 @@ import { Menu, Categoria } from '../../../models/supabase';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './admin-menu.component.html',
+  styleUrls: []
 })
 export class AdminMenuComponent implements OnInit {
   private router = inject(Router);

@@ -1,28 +1,26 @@
-<div class="min-h-screen flex items-center justify-center bg-[#121212] px-4">
+<div class="min-h-screen flex items-center justify-center px-4" style="background-color: var(--background);">
   <div class="max-w-md w-full">
-    <div class="bg-[#1E1E1E] rounded-lg p-8">
+    <div class="rounded-lg p-8" style="background-color: var(--card);">
       <h2 class="text-3xl text-center mb-6" style="font-family:'Urbanist',sans-serif;font-weight:500">
         Panel de Administrador
       </h2>
       
       <form (submit)="login()">
         <div class="mb-6">
-          <label class="block mb-2 text-[#F5F5F4]">Contraseña</label>
+          <label class="block mb-2" style="color: var(--foreground);">Contraseña</label>
           <input
             type="password"
             [value]="password()"
             (input)="password.set($any($event.target).value)"
             placeholder="Ingrese su contraseña"
-            class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded-lg px-4 py-3
-                   focus:outline-none focus:ring-2 focus:ring-[#F59E0B]"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B]" style="background-color: var(--background); border: 1px solid var(--border);"
             [disabled]="isLoading()"
           />
         </div>
         
         <button
           type="submit"
-          class="w-full bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg
-                 hover:bg-[#F59E0B]/90 transition-all font-medium"
+          class="w-full rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium px-6 py-4" style="background-color: var(--primary); color: #121212;"
           [disabled]="isLoading()"
         >
           @if (isLoading()) {

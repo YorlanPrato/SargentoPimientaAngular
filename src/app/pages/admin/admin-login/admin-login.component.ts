@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { SupabaseService } from '../../../services/supabase.service';
   imports: [FormsModule, CommonModule],
   templateUrl: './admin-login.component.html',
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnInit {
   private router = inject(Router);
   private toast = inject(ToastService);
   private supabase = inject(SupabaseService);
@@ -19,6 +19,13 @@ export class AdminLoginComponent {
   password = signal('admin123');
   isLoading = signal(false);
   private readonly ADMIN_EMAIL = 'admin@sargentopimienta.com';
+
+  async ngOnInit(): Promise<void> {
+    const { data: { session } } = await this.supabase.getSession();
+    if (session) {
+      this.router.navigate(['/admin/dashboard']);
+    }
+  }
 
   async login(): Promise<void> {
     if (!this.password()) {

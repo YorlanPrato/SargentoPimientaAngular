@@ -1,11 +1,11 @@
-<div class="min-h-screen bg-[#121212] text-[#F5F5F4]">
+<div class="min-h-screen" style="background-color: var(--background); color: var(--foreground);">
 
   <!-- Toast notifications -->
   <app-toast />
 
   <!-- ─── Navigation Bar ─────────────────────────────────────────── -->
   @if (!isAdminRoute()) {
-  <nav class="fixed top-0 left-0 right-0 bg-[#1E1E1E]/95 backdrop-blur-sm border-b border-[#F5F5F4]/10 z-50">
+  <nav class="fixed top-0 left-0 right-0 backdrop-blur-sm border-b z-50" style="background-color: var(--card); border-color: var(--border);">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center justify-between h-16">
 
@@ -43,21 +43,63 @@
               {{ item.label }}
             </a>
           }
+
+          <!-- Theme Toggle Button -->
+          <button
+            (click)="toggleTheme()"
+            class="flex items-center justify-center p-2 rounded-lg transition-all hover:bg-[#2A2A2A]"
+            [attr.aria-label]="isDarkMode ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+          >
+            @if (isDarkMode) {
+              <!-- Moon icon (dark mode active) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            } @else {
+              <!-- Sun icon (light mode active) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+              </svg>
+            }
+          </button>
         </div>
 
         <!-- Mobile Menu Button -->
-        <button
-          (click)="toggleMobileMenu()"
-          class="md:hidden p-2 hover:bg-[#2A2A2A] rounded-lg transition-colors"
-          [attr.aria-label]="mobileMenuOpen() ? 'Cerrar menú' : 'Abrir menú'"
-          [attr.aria-expanded]="mobileMenuOpen()"
-        >
-          @if (mobileMenuOpen()) {
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          } @else {
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          }
-        </button>
+        <div class="md:hidden flex items-center gap-2">
+          <!-- Theme Toggle Button (Mobile) -->
+          <button
+            (click)="toggleTheme()"
+            class="flex items-center justify-center p-2 rounded-lg transition-all hover:bg-[#2A2A2A]"
+            [attr.aria-label]="isDarkMode ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+          >
+            @if (isDarkMode) {
+              <!-- Moon icon (dark mode active) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+              </svg>
+            } @else {
+              <!-- Sun icon (light mode active) -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+              </svg>
+            }
+          </button>
+
+          <button
+            (click)="toggleMobileMenu()"
+            class="p-2 hover:bg-[#2A2A2A] rounded-lg transition-colors"
+            [attr.aria-label]="mobileMenuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+[email protected]="mobileMenuOpen()"
+          >
+            @if (mobileMenuOpen()) {
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            } @else {
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            }
+          </button>
+        </div>
       </div>
 
       <!-- Mobile Navigation Dropdown -->
@@ -90,8 +132,8 @@
   </main>
 
   <!-- ─── Footer ────────────────────────────────────────────────── -->
-  <footer class="bg-[#1E1E1E] border-t border-[#F5F5F4]/10 py-8 px-4 text-center">
-    <p class="text-[#A8A8A8]">
+  <footer class="border-t py-8 px-4 text-center" style="background-color: var(--card); border-color: var(--border);">
+    <p style="color: var(--muted-foreground);">
       © 2026 Sargento Pimienta 2.0. Donde la música y el sabor se encuentran.
     </p>
   </footer>

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SupabaseService } from '../../../services/supabase.service';
+import { ThemeService } from '../../../services/theme.service';
 import { Reserva, Menu, Evento } from '../../../models/supabase';
 
 @Component({
@@ -13,12 +14,21 @@ import { Reserva, Menu, Evento } from '../../../models/supabase';
 export class AdminDashboardComponent implements OnInit {
   private router = inject(Router);
   private supabase = inject(SupabaseService);
+  private themeService = inject(ThemeService);
 
   reservas = signal<Reserva[]>([]);
   menuItems = signal<Menu[]>([]);
   eventos = signal<Evento[]>([]);
 
   isLoading = signal(true);
+
+  get isDarkMode(): boolean {
+    return this.themeService.isDarkMode();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
 
   async ngOnInit(): Promise<void> {
     // Check authentication with Supabase
