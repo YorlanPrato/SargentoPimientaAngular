@@ -127,9 +127,7 @@
                 class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
               />
             } @else {
-              <p class="text-[#F5F5F4] bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3">
-                {{ inicioInfo().hours?.replace(/\|/g, '<br>') }}
-              </p>
+              <p class="text-[#F5F5F4] bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3" [innerHTML]="formatPipeSeparated(inicioInfo().hours)"></p>
             }
           </div>
 
@@ -232,9 +230,7 @@
                 class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
               />
             } @else {
-              <p class="text-[#F5F5F4] bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3">
-                {{ contactoInfo().email?.replace(/\|/g, '<br>') }}
-              </p>
+              <p class="text-[#F5F5F4] bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3" [innerHTML]="formatPipeSeparated(contactoInfo().email)"></p>
             }
           </div>
 
@@ -248,9 +244,7 @@
                 class="w-full bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
               />
             } @else {
-              <p class="text-[#F5F5F4] bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3">
-                {{ contactoInfo().hours?.replace(/\|/g, '<br>') }}
-              </p>
+              <p class="text-[#F5F5F4] bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3" [innerHTML]="formatPipeSeparated(contactoInfo().hours)"></p>
             }
           </div>
 
@@ -286,24 +280,24 @@
             }
           </div>
         </div>
-
-        @if (isEditing()) {
-          <div class="flex gap-2">
-            <button
-              (click)="saveInformation()"
-              class="bg-[#4ADE80] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#4ADE80]/90 transition-all"
-            >
-              Guardar
-            </button>
-            <button
-              (click)="cancelEdit()"
-              class="bg-[#DC2626] text-white px-6 py-2 rounded-lg hover:bg-[#DC2626]/90 transition-all"
-            >
-              Cancelar
-            </button>
-          </div>
-        }
       </div>
+
+      @if (isEditing()) {
+        <div class="flex gap-2 mb-6">
+          <button
+            (click)="saveInformation()"
+            class="bg-[#4ADE80] text-[#121212] px-6 py-2 rounded-lg hover:bg-[#4ADE80]/90 transition-all"
+          >
+            Guardar
+          </button>
+          <button
+            (click)="cancelEdit()"
+            class="bg-[#DC2626] text-white px-6 py-2 rounded-lg hover:bg-[#DC2626]/90 transition-all"
+          >
+            Cancelar
+          </button>
+        </div>
+      }
     }
   </div>
 </div>

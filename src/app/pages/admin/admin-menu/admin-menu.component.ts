@@ -21,7 +21,9 @@ export class AdminMenuComponent implements OnInit {
   categorias = signal<Categoria[]>([]);
   isLoading = signal(true);
   isEditing = signal(false);
+  isEditingCategoria = signal(false);
   editingItem = signal<Menu | null>(null);
+  editingCategoria = signal<Categoria | null>(null);
   newItem = signal<Menu>({
     nombre: '',
     descripcion: '',
@@ -31,9 +33,6 @@ export class AdminMenuComponent implements OnInit {
   });
   selectedFile = signal<File | null>(null);
   isUploading = signal(false);
-  activeTab = signal<'platos' | 'categorias'>('platos');
-  isEditingCategoria = signal(false);
-  editingCategoria = signal<Categoria | null>(null);
 
   async ngOnInit(): Promise<void> {
     const { data: { session } } = await this.supabase.getSession();
@@ -183,17 +182,25 @@ export class AdminMenuComponent implements OnInit {
     this.router.navigate(['/admin/dashboard']);
   }
 
+  parseFloat(value: string): number {
+    return parseFloat(value);
+  }
+
+  parseInt(value: string): number {
+    return parseInt(value, 10);
+  }
+
   // Métodos para gestión de categorías
+  startEditCategoria(categoria: Categoria): void {
+    this.isEditingCategoria.set(true);
+    this.editingCategoria.set({ ...categoria });
+  }
+
   startNewCategoria(): void {
     this.isEditingCategoria.set(true);
     this.editingCategoria.set({
       nombre: ''
     });
-  }
-
-  startEditCategoria(categoria: Categoria): void {
-    this.isEditingCategoria.set(true);
-    this.editingCategoria.set({ ...categoria });
   }
 
   cancelEditCategoria(): void {
@@ -205,8 +212,8 @@ export class AdminMenuComponent implements OnInit {
     const categoria = this.editingCategoria();
     if (!categoria) return;
 
-    if (!categoria.nombre) {
-      this.toast.error('Error', 'Por favor ingresa un nombre');
+    if (!categoria.nombre.trim()) {
+      this.toast.error('Error', 'El nombre de la categoría es requerido');
       return;
     }
 
@@ -236,8 +243,41 @@ export class AdminMenuComponent implements OnInit {
     await this.loadData();
   }
 
-  async deleteCategoria(id: string): Promise<void> {
-    if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
+  // Obtener platos agrupados por categoría
+  getItemsByCategoria(): Map<string, Menu[]> {
+    const grouped = new Map<string, Menu[]>();
+    for (const item of this.menuItems()) {
+      const catId = item.categoria_id || 'sin-categoria';
+      if (!grouped.has(catId)) {
+        grouped.set(catId, []);
+      }
+      grouped.get(catId)!.push(item);
+    }
+    return grouped;
+  }
+
+  getCategoriaNombre(categoriaId: string): string {
+    const categoria = this.categorias().find(c => c.id === categoriaId);
+    return categoria?.nombre || 'Sin categoría';
+  }
+
+  // Métodos para filtrado en template
+  getItemsByCategoriaId(categoriaId: string | undefined): Menu[] {
+    if (!categoriaId) return [];
+    return this.menuItems().filter(m => m.categoria_id === categoriaId);
+  }
+
+  getItemsWithoutCategoria(): Menu[] {
+    return this.menuItems().filter(m => !m.categoria_id);
+  }
+
+  hasItemsWithoutCategoria(): boolean {
+    return this.menuItems().some(m => !m.categoria_id);
+  }
+
+  async handleDeleteCategoria(id: string | undefined): Promise<void> {
+    if (!id) return;
+    if (!confirm('¿Está seguro de eliminar esta categoría? Los platos asociados perderán su categoría.')) return;
 
     const { error } = await this.supabase.deleteCategoria(id);
     if (error) {
@@ -246,13 +286,5 @@ export class AdminMenuComponent implements OnInit {
       this.toast.success('Éxito', 'Categoría eliminada');
       await this.loadData();
     }
-  }
-
-  parseFloat(value: string): number {
-    return parseFloat(value);
-  }
-
-  parseInt(value: string): number {
-    return parseInt(value, 10);
   }
 }

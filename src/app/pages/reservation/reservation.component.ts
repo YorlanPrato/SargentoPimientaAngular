@@ -90,19 +90,17 @@ export class ReservationComponent implements AfterViewInit {
     this.loadConfig();
   }
 
-  loadConfig(): void {
-    const savedMaxGuests = localStorage.getItem('maxGuests');
-    const savedNumTables = localStorage.getItem('numTables');
-    
-    if (savedMaxGuests) {
-      const maxGuests = parseInt(savedMaxGuests, 10);
+  async loadConfig(): Promise<void> {
+    const { data, error } = await this.supabase.getReservasConfig();
+    if (data) {
+      const maxGuests = data.max_comensales;
+      const numTables = data.num_mesas;
+      
       this.guestOptions.set(Array.from({ length: maxGuests }, (_, i) => i + 1));
-    }
-    
-    if (savedNumTables) {
-      const numTables = parseInt(savedNumTables, 10);
       this.tableOptions.set(Array.from({ length: numTables }, (_, i) => i + 1));
       this.availableTables.set(Array.from({ length: numTables }, (_, i) => i + 1));
+    } else if (error) {
+      console.error('Error loading config:', error);
     }
   }
 
