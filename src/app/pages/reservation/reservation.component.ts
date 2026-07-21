@@ -5,13 +5,15 @@ import { ToastService } from '../../services/toast.service';
 import { SupabaseService } from '../../services/supabase.service';
 import { OPERATING_HOURS } from '../../models/data';
 import { Reserva } from '../../models/supabase';
+import { SmsConfirmationModalComponent } from '../../components/sms-confirmation-modal/sms-confirmation-modal.component';
+import jsPDF from 'jspdf';
 
 type NationalityType = 'V' | 'E';
 
 @Component({
   selector: 'app-reservation',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, SmsConfirmationModalComponent],
   templateUrl: './reservation.component.html',
 })
 export class ReservationComponent implements AfterViewInit {
@@ -34,6 +36,11 @@ export class ReservationComponent implements AfterViewInit {
   availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   recaptchaToken = signal('');
   recaptchaSiteKey = (import.meta as any).env?.['RECAPTCHA_SITE_KEY'] || '6LcaeCAtAAAAAJITlUfGGbA1M5F-V0WI4tutTyN0';
+  
+  // SMS Confirmation
+  showSmsModal = signal(false);
+  pendingReserva = signal<Reserva | null>(null);
+  readonly CONFIRMATION_CODE = '123456';
 
   formatTo12Hour(time24: string): string {
     const [hours, minutes] = time24.split(':');
@@ -200,27 +207,126 @@ export class ReservationComponent implements AfterViewInit {
       numero_mesa: this.selectedTable()!
     };
 
-    this.supabase.createReserva(reserva).then(({ error }) => {
-      if (error) {
-        this.toast.error('Error al crear reserva', error.message);
-        return;
-      }
+    // Guardar reserva pendiente y mostrar modal de SMS
+    this.pendingReserva.set(reserva);
+    this.showSmsModal.set(true);
+  }
 
-      const g = this.guests();
-      this.toast.success(
-        '¡Reserva confirmada! Te esperamos.',
-        `${this.selectedDate()} a las ${this.selectedTime()} para ${g} ${g === 1 ? 'persona' : 'personas'}`
-      );
+  onSmsModalClose(): void {
+    this.showSmsModal.set(false);
+    this.pendingReserva.set(null);
+  }
 
-      // Reset
-      this.idNumber.set('');
-      this.fullName.set('');
-      this.phone.set('');
-      this.guests.set(null);
-      this.selectedDate.set('');
-      this.selectedTime.set('');
-      this.selectedTable.set(null);
-      this.availableTables.set(this.tableOptions());
-    });
+  async onSmsConfirm(code: string): Promise<void> {
+    if (code !== this.CONFIRMATION_CODE) {
+      this.toast.error('Código incorrecto', 'El código ingresado no es válido');
+      return;
+    }
+
+    const reserva = this.pendingReserva();
+    if (!reserva) {
+      this.toast.error('Error', 'No hay reserva pendiente');
+      this.showSmsModal.set(false);
+      return;
+    }
+
+    // Guardar en Supabase
+    const { error } = await this.supabase.createReserva(reserva);
+    if (error) {
+      this.toast.error('Error al crear reserva', error.message);
+      this.showSmsModal.set(false);
+      return;
+    }
+
+    this.toast.success(
+      '¡Reserva confirmada! Te esperamos.',
+      `${reserva.fecha} a las ${reserva.hora} para ${reserva.comensales} ${reserva.comensales === 1 ? 'persona' : 'personas'}`
+    );
+
+    // Reset
+    this.idNumber.set('');
+    this.fullName.set('');
+    this.phone.set('');
+    this.guests.set(null);
+    this.selectedDate.set('');
+    this.selectedTime.set('');
+    this.selectedTable.set(null);
+    this.availableTables.set(this.tableOptions());
+    this.showSmsModal.set(false);
+    this.pendingReserva.set(null);
+
+    // Generar PDF del recibo
+    this.generateReceipt(reserva);
+  }
+
+  generateReceipt(reserva: Reserva): void {
+    const doc = new jsPDF();
+    
+    // Configuración de colores
+    const primaryColor = '#F59E0B';
+    const textColor = '#1E1E1E';
+    const mutedColor = '#6B7280';
+    
+    // Título
+    doc.setFontSize(24);
+    doc.setTextColor(primaryColor);
+    doc.text('Sargento Pimienta 2.0', 105, 20, { align: 'center' });
+    
+    // Subtítulo
+    doc.setFontSize(16);
+    doc.setTextColor(textColor);
+    doc.text('Recibo de Reserva', 105, 35, { align: 'center' });
+    
+    // Línea separadora
+    doc.setDrawColor(primaryColor);
+    doc.setLineWidth(0.5);
+    doc.line(20, 45, 190, 45);
+    
+    // Información de la reserva
+    doc.setFontSize(12);
+    doc.setTextColor(mutedColor);
+    doc.text('Detalles de la Reserva', 20, 55);
+    
+    doc.setTextColor(textColor);
+    doc.setFontSize(11);
+    let y = 65;
+    
+    doc.text(`Nombre: ${reserva.nombre_cliente}`, 20, y);
+    y += 10;
+    doc.text(`Cédula: ${reserva.cedula}`, 20, y);
+    y += 10;
+    doc.text(`Teléfono: ${reserva.telefono}`, 20, y);
+    y += 10;
+    doc.text(`Fecha: ${reserva.fecha}`, 20, y);
+    y += 10;
+    doc.text(`Hora: ${this.formatTo12Hour(reserva.hora)}`, 20, y);
+    y += 10;
+    doc.text(`Comensales: ${reserva.comensales}`, 20, y);
+    y += 10;
+    doc.text(`Mesa: ${reserva.numero_mesa}`, 20, y);
+    y += 10;
+    doc.text(`Estado: ${reserva.estado}`, 20, y);
+    
+    // Línea separadora
+    doc.setDrawColor(primaryColor);
+    doc.line(20, y + 5, 190, y + 5);
+    
+    // Mensaje de confirmación
+    y += 20;
+    doc.setFontSize(10);
+    doc.setTextColor(mutedColor);
+    doc.text('Gracias por su reserva. Te esperamos en Sargento Pimienta 2.0.', 105, y, { align: 'center' });
+    
+    y += 10;
+    doc.text('Presente este recibo al llegar al restaurante.', 105, y, { align: 'center' });
+    
+    // Fecha de generación
+    const now = new Date();
+    doc.setFontSize(8);
+    doc.setTextColor(mutedColor);
+    doc.text(`Generado: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 105, 280, { align: 'center' });
+    
+    // Guardar PDF
+    doc.save(`recibo-reserva-${reserva.cedula}-${reserva.fecha}.pdf`);
   }
 }

@@ -18,7 +18,7 @@
           </svg>
           Volver al Dashboard
         </button>
-        <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+        <h1 class="text-xl md:text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
           Gestión de Menú
         </h1>
       </div>
@@ -222,15 +222,16 @@
             <div class="px-6 py-3" style="background-color: var(--muted);">
               <h3 class="text-lg font-medium" style="color: var(--primary);">{{ categoria.nombre }}</h3>
             </div>
-            <table class="w-full">
-              <thead style="background-color: var(--card);">
-                <tr>
-                  <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Nombre</th>
-                  <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Precio</th>
-                  <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Disponible</th>
-                  <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Acciones</th>
-                </tr>
-              </thead>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead style="background-color: var(--card);">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Nombre</th>
+                    <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Precio</th>
+                    <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Disponible</th>
+                    <th class="px-6 py-3 text-left text-sm" style="color: var(--foreground);">Acciones</th>
+                  </tr>
+                </thead>
               <tbody>
                 @for (item of getItemsByCategoriaId(categoria.id); track item.id) {
                   <tr class="border-b hover:bg-[var(--card)]" style="border-color: var(--border);">
@@ -270,6 +271,7 @@
                 }
               </tbody>
             </table>
+            </div>
           </div>
         }
 
