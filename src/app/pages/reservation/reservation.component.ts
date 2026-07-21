@@ -19,8 +19,8 @@ export class ReservationComponent implements AfterViewInit {
   private supabase = inject(SupabaseService);
 
   readonly operatingHours = OPERATING_HOURS;
-  readonly guestOptions = [1, 2, 3, 4, 5];
-  readonly tableOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  guestOptions = signal<number[]>([1, 2, 3, 4, 5]);
+  tableOptions = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   readonly today = new Date().toISOString().split('T')[0];
 
   nationality = signal<NationalityType>('V');
@@ -87,6 +87,23 @@ export class ReservationComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.loadRecaptchaScript();
+    this.loadConfig();
+  }
+
+  loadConfig(): void {
+    const savedMaxGuests = localStorage.getItem('maxGuests');
+    const savedNumTables = localStorage.getItem('numTables');
+    
+    if (savedMaxGuests) {
+      const maxGuests = parseInt(savedMaxGuests, 10);
+      this.guestOptions.set(Array.from({ length: maxGuests }, (_, i) => i + 1));
+    }
+    
+    if (savedNumTables) {
+      const numTables = parseInt(savedNumTables, 10);
+      this.tableOptions.set(Array.from({ length: numTables }, (_, i) => i + 1));
+      this.availableTables.set(Array.from({ length: numTables }, (_, i) => i + 1));
+    }
   }
 
   loadRecaptchaScript(): void {
@@ -124,7 +141,7 @@ export class ReservationComponent implements AfterViewInit {
 
   async loadAvailableTables(): Promise<void> {
     if (!this.selectedDate()) {
-      this.availableTables.set(this.tableOptions);
+      this.availableTables.set(this.tableOptions());
       return;
     }
 
@@ -138,7 +155,7 @@ export class ReservationComponent implements AfterViewInit {
       .filter(r => r.fecha === this.selectedDate() && r.numero_mesa)
       .map(r => r.numero_mesa!);
 
-    const available = this.tableOptions.filter((table: number) => !occupiedTables.includes(table));
+    const available = this.tableOptions().filter((table: number) => !occupiedTables.includes(table));
     this.availableTables.set(available);
 
     if (this.selectedTable() && !available.includes(this.selectedTable()!)) {
@@ -205,7 +222,7 @@ export class ReservationComponent implements AfterViewInit {
       this.selectedDate.set('');
       this.selectedTime.set('');
       this.selectedTable.set(null);
-      this.availableTables.set(this.tableOptions);
+      this.availableTables.set(this.tableOptions());
     });
   }
 }

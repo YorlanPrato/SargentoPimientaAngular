@@ -136,4 +136,17 @@ export class SupabaseService {
   async getSession() {
     return await this.supabase.auth.getSession();
   }
+
+  // Información del Sitio
+  async getSitioInfo(section: string) {
+    return await this.supabase.from('sitio_info').select('*').eq('section', section).single();
+  }
+
+  async getAllSitioInfo() {
+    return await this.supabase.from('sitio_info').select('*');
+  }
+
+  async updateSitioInfo(section: string, data: any) {
+    return await this.supabase.from('sitio_info').update(data).eq('section', section);
+  }
 }
