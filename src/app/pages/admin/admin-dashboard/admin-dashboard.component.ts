@@ -21,8 +21,9 @@ export class AdminDashboardComponent implements OnInit {
   isLoading = signal(true);
 
   async ngOnInit(): Promise<void> {
-    // Check authentication
-    if (!localStorage.getItem('adminAuthenticated')) {
+    // Check authentication with Supabase
+    const { data: { session } } = await this.supabase.getSession();
+    if (!session) {
       this.router.navigate(['/admin']);
       return;
     }
@@ -63,9 +64,9 @@ export class AdminDashboardComponent implements OnInit {
     }
   }
 
-  logout(): void {
-    localStorage.removeItem('adminAuthenticated');
-    this.router.navigate(['/admin']);
+  async logout(): Promise<void> {
+    await this.supabase.signOut();
+    this.router.navigate(['/']);
   }
 
   navigateTo(section: string): void {

@@ -4,6 +4,7 @@
   <app-toast />
 
   <!-- ─── Navigation Bar ─────────────────────────────────────────── -->
+  @if (!isAdminRoute()) {
   <nav class="fixed top-0 left-0 right-0 bg-[#1E1E1E]/95 backdrop-blur-sm border-b border-[#F5F5F4]/10 z-50">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex items-center justify-between h-16">
@@ -81,9 +82,10 @@
       }
     </div>
   </nav>
+  }
 
   <!-- ─── Page Content ───────────────────────────────────────────── -->
-  <main class="pt-16">
+  <main [class]="isAdminRoute() ? 'pt-0' : 'pt-16'">
     <router-outlet />
   </main>
 

@@ -21,12 +21,21 @@ export class AdminReservasComponent implements OnInit {
   isLoading = signal(true);
   editingReserva = signal<Reserva | null>(null);
 
+  // Configuration from Supabase
+  maxGuests = signal(10);
+  numTables = signal(20);
+  isConfiguring = signal(false);
+  configType = signal<'guests' | 'tables' | null>(null);
+  configId = signal<string | null>(null);
+
   async ngOnInit(): Promise<void> {
-    if (!localStorage.getItem('adminAuthenticated')) {
+    const { data: { session } } = await this.supabase.getSession();
+    if (!session) {
       this.router.navigate(['/admin']);
       return;
     }
     await this.loadReservas();
+    await this.loadConfig();
   }
 
   async loadReservas(): Promise<void> {
@@ -36,6 +45,17 @@ export class AdminReservasComponent implements OnInit {
       this.reservas.set(data);
     }
     this.isLoading.set(false);
+  }
+
+  async loadConfig(): Promise<void> {
+    const { data, error } = await this.supabase.getReservasConfig();
+    if (data) {
+      this.maxGuests.set(data.max_comensales);
+      this.numTables.set(data.num_mesas);
+      this.configId.set(data.id);
+    } else if (error) {
+      console.error('Error loading config:', error);
+    }
   }
 
   editReserva(reserva: Reserva): void {
@@ -87,5 +107,34 @@ export class AdminReservasComponent implements OnInit {
 
   parseInt(value: string): number {
     return parseInt(value, 10);
+  }
+
+  openMaxGuestsConfig(): void {
+    this.configType.set('guests');
+    this.isConfiguring.set(true);
+  }
+
+  openTablesConfig(): void {
+    this.configType.set('tables');
+    this.isConfiguring.set(true);
+  }
+
+  closeConfig(): void {
+    this.isConfiguring.set(false);
+    this.configType.set(null);
+  }
+
+  async saveConfig(): Promise<void> {
+    const { error } = await this.supabase.updateReservasConfig({
+      max_comensales: this.maxGuests(),
+      num_mesas: this.numTables()
+    });
+
+    if (error) {
+      this.toast.error('Error', error.message);
+    } else {
+      this.toast.success('Éxito', 'Configuración actualizada');
+      this.closeConfig();
+    }
   }
 }

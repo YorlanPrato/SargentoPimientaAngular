@@ -21,7 +21,9 @@ export class AdminMenuComponent implements OnInit {
   categorias = signal<Categoria[]>([]);
   isLoading = signal(true);
   isEditing = signal(false);
+  isEditingCategoria = signal(false);
   editingItem = signal<Menu | null>(null);
+  editingCategoria = signal<Categoria | null>(null);
   newItem = signal<Menu>({
     nombre: '',
     descripcion: '',
@@ -33,7 +35,8 @@ export class AdminMenuComponent implements OnInit {
   isUploading = signal(false);
 
   async ngOnInit(): Promise<void> {
-    if (!localStorage.getItem('adminAuthenticated')) {
+    const { data: { session } } = await this.supabase.getSession();
+    if (!session) {
       this.router.navigate(['/admin']);
       return;
     }
@@ -185,5 +188,103 @@ export class AdminMenuComponent implements OnInit {
 
   parseInt(value: string): number {
     return parseInt(value, 10);
+  }
+
+  // Métodos para gestión de categorías
+  startEditCategoria(categoria: Categoria): void {
+    this.isEditingCategoria.set(true);
+    this.editingCategoria.set({ ...categoria });
+  }
+
+  startNewCategoria(): void {
+    this.isEditingCategoria.set(true);
+    this.editingCategoria.set({
+      nombre: ''
+    });
+  }
+
+  cancelEditCategoria(): void {
+    this.isEditingCategoria.set(false);
+    this.editingCategoria.set(null);
+  }
+
+  async saveCategoria(): Promise<void> {
+    const categoria = this.editingCategoria();
+    if (!categoria) return;
+
+    if (!categoria.nombre.trim()) {
+      this.toast.error('Error', 'El nombre de la categoría es requerido');
+      return;
+    }
+
+    if (categoria.id) {
+      const { error } = await this.supabase.updateCategoria(categoria.id, {
+        nombre: categoria.nombre
+      });
+
+      if (error) {
+        this.toast.error('Error', error.message);
+      } else {
+        this.toast.success('Éxito', 'Categoría actualizada');
+      }
+    } else {
+      const { error } = await this.supabase.createCategoria({
+        nombre: categoria.nombre
+      });
+
+      if (error) {
+        this.toast.error('Error', error.message);
+      } else {
+        this.toast.success('Éxito', 'Categoría creada');
+      }
+    }
+
+    this.cancelEditCategoria();
+    await this.loadData();
+  }
+
+  // Obtener platos agrupados por categoría
+  getItemsByCategoria(): Map<string, Menu[]> {
+    const grouped = new Map<string, Menu[]>();
+    for (const item of this.menuItems()) {
+      const catId = item.categoria_id || 'sin-categoria';
+      if (!grouped.has(catId)) {
+        grouped.set(catId, []);
+      }
+      grouped.get(catId)!.push(item);
+    }
+    return grouped;
+  }
+
+  getCategoriaNombre(categoriaId: string): string {
+    const categoria = this.categorias().find(c => c.id === categoriaId);
+    return categoria?.nombre || 'Sin categoría';
+  }
+
+  // Métodos para filtrado en template
+  getItemsByCategoriaId(categoriaId: string | undefined): Menu[] {
+    if (!categoriaId) return [];
+    return this.menuItems().filter(m => m.categoria_id === categoriaId);
+  }
+
+  getItemsWithoutCategoria(): Menu[] {
+    return this.menuItems().filter(m => !m.categoria_id);
+  }
+
+  hasItemsWithoutCategoria(): boolean {
+    return this.menuItems().some(m => !m.categoria_id);
+  }
+
+  async handleDeleteCategoria(id: string | undefined): Promise<void> {
+    if (!id) return;
+    if (!confirm('¿Está seguro de eliminar esta categoría? Los platos asociados perderán su categoría.')) return;
+
+    const { error } = await this.supabase.deleteCategoria(id);
+    if (error) {
+      this.toast.error('Error', error.message);
+    } else {
+      this.toast.success('Éxito', 'Categoría eliminada');
+      await this.loadData();
+    }
   }
 }

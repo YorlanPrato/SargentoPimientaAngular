@@ -140,7 +140,7 @@
           Número de Comensales
         </label>
         <div class="flex gap-3 flex-wrap">
-          @for (num of guestOptions; track num) {
+          @for (num of guestOptions(); track num) {
             <button
               type="button"
               (click)="setGuests(num)"
@@ -167,7 +167,7 @@
           Selección de Mesa
         </label>
         <div class="flex gap-3 flex-wrap">
-          @for (table of tableOptions; track table) {
+          @for (table of tableOptions(); track table) {
             <button
               type="button"
               (click)="setTable(table)"

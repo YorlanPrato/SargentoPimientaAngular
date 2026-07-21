@@ -2,24 +2,82 @@
   <!-- Header -->
   <div class="bg-[#1E1E1E] border-b border-[#F5F5F4]/10">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <button
-        (click)="goBack()"
-        class="text-[#F5F5F4] hover:text-[#F59E0B] transition-all flex items-center gap-2"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="15 18 9 12 15 6"/>
-          <line x1="19" y1="6" x2="5" y2="6"/>
-        </svg>
-        Volver al Dashboard
-      </button>
-      <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
-        Gestión de Reservas
-      </h1>
+      <div class="flex items-center gap-4">
+        <img
+          src="assets/sargento-pimienta-logo.png"
+          alt="Sargento Pimienta 2.0"
+          class="h-10 w-auto"
+        />
+        <button
+          (click)="goBack()"
+          class="text-[#F5F5F4] hover:text-[#F59E0B] transition-all flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+            <line x1="19" y1="6" x2="5" y2="6"/>
+          </svg>
+          Volver al Dashboard
+        </button>
+        <h1 class="text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
+          Gestión de Reservas
+        </h1>
+      </div>
     </div>
   </div>
 
   <!-- Content -->
   <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Configuration Buttons -->
+    <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
+      <div class="flex gap-4">
+        <button
+          (click)="openMaxGuestsConfig()"
+          class="flex-1 bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium"
+        >
+          Configurar Comensales Máximos
+        </button>
+        <button
+          (click)="openTablesConfig()"
+          class="flex-1 bg-[#F59E0B] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#F59E0B]/90 transition-all font-medium"
+        >
+          Configurar Número de Mesas
+        </button>
+      </div>
+    </div>
+
+    @if (isConfiguring()) {
+      <div class="bg-[#1E1E1E] rounded-lg border border-[#F5F5F4]/10 p-6 mb-6">
+        <h2 class="text-xl mb-4" style="font-family:'Urbanist',sans-serif;font-weight:500">
+          @if (configType() === 'guests') {
+            Configurar Comensales Máximos
+          } @else {
+            Configurar Número de Mesas
+          }
+        </h2>
+        <div class="flex gap-4 items-center">
+          <input
+            type="number"
+            [value]="configType() === 'guests' ? maxGuests() : numTables()"
+            (input)="configType() === 'guests' ? maxGuests.set(parseInt($any($event.target).value)) : numTables.set(parseInt($any($event.target).value))"
+            class="flex-1 bg-[#121212] border border-[#F5F5F4]/10 rounded px-4 py-3"
+            min="1"
+          />
+          <button
+            (click)="saveConfig()"
+            class="bg-[#4ADE80] text-[#121212] px-6 py-3 rounded-lg hover:bg-[#4ADE80]/90 transition-all font-medium"
+          >
+            Guardar
+          </button>
+          <button
+            (click)="closeConfig()"
+            class="bg-[#DC2626] text-white px-6 py-3 rounded-lg hover:bg-[#DC2626]/90 transition-all font-medium"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    }
+
     @if (isLoading()) {
       <div class="flex justify-center items-center h-64">
         <svg class="animate-spin h-12 w-12 text-[#F59E0B]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
