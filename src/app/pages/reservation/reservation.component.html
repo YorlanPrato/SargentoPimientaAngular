@@ -204,4 +204,12 @@
 
     </form>
   </div>
+
+  <!-- SMS Confirmation Modal -->
+  <app-sms-confirmation-modal
+    [isOpen]="showSmsModal()"
+    [phoneNumber]="phone()"
+    (close)="onSmsModalClose()"
+    (confirm)="onSmsConfirm($event)"
+  />
 </div>
