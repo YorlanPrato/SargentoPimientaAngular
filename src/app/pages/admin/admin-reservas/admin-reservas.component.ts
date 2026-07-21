@@ -21,12 +21,11 @@ export class AdminReservasComponent implements OnInit {
   isLoading = signal(true);
   editingReserva = signal<Reserva | null>(null);
 
-  // Configuration from Supabase
+  // Configuration (frontend-only)
   maxGuests = signal(10);
   numTables = signal(20);
   isConfiguring = signal(false);
   configType = signal<'guests' | 'tables' | null>(null);
-  configId = signal<string | null>(null);
 
   async ngOnInit(): Promise<void> {
     const { data: { session } } = await this.supabase.getSession();
@@ -35,7 +34,7 @@ export class AdminReservasComponent implements OnInit {
       return;
     }
     await this.loadReservas();
-    await this.loadConfig();
+    this.loadConfig();
   }
 
   async loadReservas(): Promise<void> {
@@ -47,15 +46,11 @@ export class AdminReservasComponent implements OnInit {
     this.isLoading.set(false);
   }
 
-  async loadConfig(): Promise<void> {
-    const { data, error } = await this.supabase.getReservasConfig();
-    if (data) {
-      this.maxGuests.set(data.max_comensales);
-      this.numTables.set(data.num_mesas);
-      this.configId.set(data.id);
-    } else if (error) {
-      console.error('Error loading config:', error);
-    }
+  loadConfig(): void {
+    const savedMaxGuests = localStorage.getItem('maxGuests');
+    const savedNumTables = localStorage.getItem('numTables');
+    if (savedMaxGuests) this.maxGuests.set(parseInt(savedMaxGuests, 10));
+    if (savedNumTables) this.numTables.set(parseInt(savedNumTables, 10));
   }
 
   editReserva(reserva: Reserva): void {
@@ -125,16 +120,10 @@ export class AdminReservasComponent implements OnInit {
   }
 
   async saveConfig(): Promise<void> {
-    const { error } = await this.supabase.updateReservasConfig({
-      max_comensales: this.maxGuests(),
-      num_mesas: this.numTables()
-    });
-
-    if (error) {
-      this.toast.error('Error', error.message);
-    } else {
-      this.toast.success('Éxito', 'Configuración actualizada');
-      this.closeConfig();
-    }
+    // Frontend-only: save to localStorage or just update signal
+    localStorage.setItem('maxGuests', this.maxGuests().toString());
+    localStorage.setItem('numTables', this.numTables().toString());
+    this.toast.success('Éxito', 'Configuración actualizada');
+    this.closeConfig();
   }
 }

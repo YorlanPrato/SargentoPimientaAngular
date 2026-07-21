@@ -136,26 +136,4 @@ export class SupabaseService {
   async getSession() {
     return await this.supabase.auth.getSession();
   }
-
-  // Configuración de Reservas
-  async getReservasConfig() {
-    return await this.supabase.from('reservas_config').select('*').single();
-  }
-
-  async updateReservasConfig(config: { max_comensales: number; num_mesas: number }) {
-    return await this.supabase.from('reservas_config').update(config).eq('id', (await this.getReservasConfig()).data?.id);
-  }
-
-  // Información del Sitio
-  async getSitioInfo(section: string) {
-    return await this.supabase.from('sitio_info').select('*').eq('section', section).single();
-  }
-
-  async getAllSitioInfo() {
-    return await this.supabase.from('sitio_info').select('*');
-  }
-
-  async updateSitioInfo(section: string, data: any) {
-    return await this.supabase.from('sitio_info').update(data).eq('section', section);
-  }
 }

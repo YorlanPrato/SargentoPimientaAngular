@@ -46,10 +46,5 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/admin/admin-eventos/admin-eventos.component').then(m => m.AdminEventosComponent)
   },
-  {
-    path: 'admin/informacion',
-    loadComponent: () =>
-      import('./pages/admin/admin-informacion/admin-informacion.component').then(m => m.AdminInformacionComponent)
-  },
   { path: '**', redirectTo: '' }
 ];
