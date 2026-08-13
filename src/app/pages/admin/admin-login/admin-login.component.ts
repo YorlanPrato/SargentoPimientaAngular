@@ -18,7 +18,7 @@ export class AdminLoginComponent implements OnInit {
 
   password = signal('admin123');
   isLoading = signal(false);
-  private readonly ADMIN_EMAIL = 'admin@sargentopimienta.com';
+  private readonly ADMIN_EMAIL = 'sargentopimientaweb@gmail.com';
 
   async ngOnInit(): Promise<void> {
     const { data: { session } } = await this.supabase.getSession();
