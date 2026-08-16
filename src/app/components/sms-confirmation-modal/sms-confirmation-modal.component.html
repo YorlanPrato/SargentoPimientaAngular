@@ -37,6 +37,11 @@
             style="background-color: var(--input); color: var(--foreground); border: 1px solid var(--border);"
             placeholder="ejemplo@correo.com"
           />
+          @if (email() && !isValidEmail(email())) {
+            <p class="mt-2 text-sm" style="color: #ef4444;">
+              Formato de correo inválido. Use el formato: *@*.*
+            </p>
+          }
         </div>
         
         <div class="flex gap-4">
@@ -79,6 +84,11 @@
         <p class="mb-6 font-medium" style="color: var(--foreground);">
           {{ email() }}
         </p>
+        
+        <!-- reCAPTCHA -->
+        <div class="mb-6">
+          <div id="recaptcha-modal-container" class="flex justify-center"></div>
+        </div>
         
         <div class="mb-6">
           <label class="block mb-2" style="color: var(--foreground);">

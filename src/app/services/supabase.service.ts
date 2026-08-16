@@ -140,10 +140,7 @@ export class SupabaseService {
   // OTP para verificación de reservas
   async sendOtp(email: string) {
     return await this.supabase.auth.signInWithOtp({
-      email: email,
-      options: {
-        shouldCreateUser: false // No crear usuario, solo verificar
-      }
+      email: email
     });
   }
 
