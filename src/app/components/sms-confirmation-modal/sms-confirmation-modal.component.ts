@@ -13,8 +13,6 @@ export class SmsConfirmationModalComponent implements AfterViewInit {
   isOpen = input.required<boolean>();
   pendingReserva = input.required<Reserva | null>();
   recaptchaSiteKey = input.required<string>();
-  formatDate = input.required<(date: string) => string>();
-  formatTime = input.required<(time: string) => string>();
   close = output<void>();
   requestCode = output<string>();
   confirm = output<string>();
@@ -25,6 +23,19 @@ export class SmsConfirmationModalComponent implements AfterViewInit {
   email = signal('');
   verificationCode = signal('');
   isLoading = signal(false);
+
+  formatDate(date: string): string {
+    const [year, month, day] = date.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
+  formatTime(time: string): string {
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${ampm}`;
+  }
 
   isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
