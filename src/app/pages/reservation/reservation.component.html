@@ -185,6 +185,9 @@
       <!-- Submit -->
       <button
         type="submit"
+        [disabled]="!isFormValid()"
+        [class.opacity-50]="!isFormValid()"
+        [class.cursor-not-allowed]="!isFormValid()"
         class="w-full bg-[#F59E0B] text-[#121212] px-6 py-4 rounded-lg
                hover:bg-[#F59E0B]/90 transition-all flex items-center justify-center gap-2 mt-8 font-medium"
       >

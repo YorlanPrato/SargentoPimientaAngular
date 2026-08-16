@@ -34,6 +34,7 @@ export class ReservationComponent implements AfterViewInit {
   selectedTime = signal('');
   selectedTable = signal<number | null>(null);
   availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  reservas = signal<Reserva[]>([]);
   recaptchaToken = signal('');
   recaptchaSiteKey = (import.meta as any).env?.['RECAPTCHA_SITE_KEY'] || '6LcaeCAtAAAAAJITlUfGGbA1M5F-V0WI4tutTyN0';
   
@@ -76,7 +77,10 @@ export class ReservationComponent implements AfterViewInit {
   }
 
   onNameChange(event: Event): void {
-    this.fullName.set((event.target as HTMLInputElement).value);
+    const raw = (event.target as HTMLInputElement).value;
+    // Solo permitir letras, espacios, tildes, dieresis, ñ y apóstrofes
+    const validChars = raw.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s']/g, '');
+    this.fullName.set(validChars);
   }
 
   setGuests(n: number): void {
@@ -95,6 +99,16 @@ export class ReservationComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.loadRecaptchaScript();
     this.loadConfig();
+    this.loadReservas();
+  }
+
+  async loadReservas(): Promise<void> {
+    const { data, error } = await this.supabase.getReservas();
+    if (data) {
+      this.reservas.set(data);
+    } else if (error) {
+      console.error('Error loading reservas:', error);
+    }
   }
 
   async loadConfig(): Promise<void> {
@@ -145,20 +159,14 @@ export class ReservationComponent implements AfterViewInit {
   }
 
   async loadAvailableTables(): Promise<void> {
-    if (!this.selectedDate()) {
+    if (!this.selectedDate() || !this.selectedTime()) {
       this.availableTables.set(this.tableOptions());
       return;
     }
 
-    const { data: reservas, error } = await this.supabase.getReservas();
-    if (error) {
-      this.toast.error('Error al cargar mesas', error.message);
-      return;
-    }
-
-    const occupiedTables = reservas
-      .filter(r => r.fecha === this.selectedDate() && r.numero_mesa)
-      .map(r => r.numero_mesa!);
+    const occupiedTables = this.reservas()
+      .filter((r: Reserva) => r.fecha === this.selectedDate() && r.hora === this.selectedTime())
+      .map((r: Reserva) => r.numero_mesa);
 
     const available = this.tableOptions().filter((table: number) => !occupiedTables.includes(table));
     this.availableTables.set(available);
@@ -168,26 +176,24 @@ export class ReservationComponent implements AfterViewInit {
     }
   }
 
+  isFormValid(): boolean {
+    return !!(
+      this.idNumber() &&
+      this.fullName() &&
+      this.phone() &&
+      this.phone().length >= 10 &&
+      this.selectedDate() &&
+      this.selectedTime() &&
+      this.guests() &&
+      this.selectedTable()
+    );
+  }
+
   handleSubmit(event: Event): void {
     event.preventDefault();
 
-    if (!this.idNumber() || !this.fullName() || !this.phone() || !this.selectedDate() || !this.selectedTime()) {
-      this.toast.error('Campos incompletos', 'Por favor complete todos los campos');
-      return;
-    }
-
-    if (this.phone().length < 10) {
-      this.toast.error('Teléfono inválido', 'El teléfono debe tener al menos 10 dígitos');
-      return;
-    }
-
-    if (!this.guests()) {
-      this.toast.error('Comensales requeridos', 'Por favor selecciona el número de comensales');
-      return;
-    }
-
-    if (!this.selectedTable()) {
-      this.toast.error('Mesa requerida', 'Por favor selecciona una mesa');
+    if (!this.isFormValid()) {
+      this.toast.error('Campos incompletos', 'Por favor complete todos los campos correctamente');
       return;
     }
 

@@ -54,7 +54,9 @@
           </button>
           <button
             (click)="onRequestCode()"
-            [disabled]="isLoading() || !email()"
+            [disabled]="isLoading() || !email() || !isValidEmail(email())"
+            [class.opacity-50]="!email() || !isValidEmail(email())"
+            [class.cursor-not-allowed]="!email() || !isValidEmail(email())"
             class="flex-1 px-6 py-3 rounded-lg transition-all"
             style="background-color: var(--primary); color: var(--primary-foreground);"
           >
