@@ -137,6 +137,21 @@ export class SupabaseService {
     return await this.supabase.auth.getSession();
   }
 
+  // OTP para verificación de reservas
+  async sendOtp(email: string) {
+    return await this.supabase.auth.signInWithOtp({
+      email: email
+    });
+  }
+
+  async verifyOtp(email: string, token: string) {
+    return await this.supabase.auth.verifyOtp({
+      email: email,
+      token: token,
+      type: 'email'
+    });
+  }
+
   // Configuración de Reservas
   async getReservasConfig() {
     return await this.supabase.from('reservas_config').select('*').single();

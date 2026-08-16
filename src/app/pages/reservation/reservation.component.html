@@ -42,6 +42,16 @@
             class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
           />
         </div>
+        @if (idNumber() && !isValidIdNumber()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            La cédula debe tener entre 7 y 9 dígitos
+          </p>
+        }
+        @if (idNumberHasInvalidChars()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Solo se permiten números
+          </p>
+        }
       </div>
 
       <!-- Nombre -->
@@ -60,6 +70,16 @@
           placeholder="Ingrese su nombre completo"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
+        @if (fullName() && !isValidName()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Ingrese únicamente su nombre y apellido
+          </p>
+        }
+        @if (fullNameHasInvalidChars()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Solo se permiten letras, tildes y espacios
+          </p>
+        }
       </div>
 
       <!-- Teléfono -->
@@ -78,6 +98,16 @@
           placeholder="04241234567"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
+        @if (phone() && !isValidPhone()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            El teléfono debe tener al menos 10 dígitos
+          </p>
+        }
+        @if (phoneHasInvalidChars()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Solo se permiten números
+          </p>
+        }
       </div>
 
       <!-- Fecha -->
@@ -182,14 +212,12 @@
         }
       </div>
 
-      <!-- reCAPTCHA -->
-      <div>
-        <div id="recaptcha-container" class="flex justify-center"></div>
-      </div>
-
       <!-- Submit -->
       <button
         type="submit"
+        [disabled]="!isFormValid()"
+        [class.opacity-50]="!isFormValid()"
+        [class.cursor-not-allowed]="!isFormValid()"
         class="w-full bg-[#F59E0B] text-[#121212] px-6 py-4 rounded-lg
                hover:bg-[#F59E0B]/90 transition-all flex items-center justify-center gap-2 mt-8 font-medium"
       >
@@ -206,8 +234,10 @@
   <!-- SMS Confirmation Modal -->
   <app-sms-confirmation-modal
     [isOpen]="showSmsModal()"
-    [phoneNumber]="phone()"
+    [pendingReserva]="pendingReserva()"
+    [recaptchaSiteKey]="recaptchaSiteKey"
     (close)="onSmsModalClose()"
+    (requestCode)="onRequestCode($event)"
     (confirm)="onSmsConfirm($event)"
   />
 </div>

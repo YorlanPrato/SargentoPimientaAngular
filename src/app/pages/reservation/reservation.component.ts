@@ -33,14 +33,20 @@ export class ReservationComponent implements AfterViewInit {
   selectedDate = signal('');
   selectedTime = signal('');
   selectedTable = signal<number | null>(null);
-  availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+ availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  reservas = signal<Reserva[]>([]);
   recaptchaToken = signal('');
   recaptchaSiteKey = (import.meta as any).env?.['RECAPTCHA_SITE_KEY'] || '6LcaeCAtAAAAAJITlUfGGbA1M5F-V0WI4tutTyN0';
+  
+  // Errores de caracteres inválidos
+  idNumberHasInvalidChars = signal(false);
+  fullNameHasInvalidChars = signal(false);
+  phoneHasInvalidChars = signal(false);
   
   // SMS Confirmation
   showSmsModal = signal(false);
   pendingReserva = signal<Reserva | null>(null);
-  readonly CONFIRMATION_CODE = '123456';
+  customerEmail = signal('');
 
   formatTo12Hour(time24: string): string {
     const [hours, minutes] = time24.split(':');
@@ -50,15 +56,25 @@ export class ReservationComponent implements AfterViewInit {
     return `${hour12}:${minutes} ${ampm}`;
   }
 
+  formatDate(dateStr: string): string {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
   onIdChange(event: Event): void {
     const raw = (event.target as HTMLInputElement).value;
     const numbers = raw.replace(/\D/g, '');
     this.idNumber.set(numbers.slice(0, 9));
+    // Detectar si hubo caracteres inválidos
+    this.idNumberHasInvalidChars.set(raw !== numbers.slice(0, 9));
   }
 
   onPhoneChange(event: Event): void {
-    const raw = (event.target as HTMLInputElement).value.replace(/\D/g, '');
-    this.phone.set(raw.slice(0, 11));
+    const raw = (event.target as HTMLInputElement).value;
+    const numbers = raw.replace(/\D/g, '');
+    this.phone.set(numbers.slice(0, 11));
+    // Detectar si hubo caracteres inválidos
+    this.phoneHasInvalidChars.set(raw !== numbers.slice(0, 11));
   }
 
   onNationalityChange(event: Event): void {
@@ -76,7 +92,26 @@ export class ReservationComponent implements AfterViewInit {
   }
 
   onNameChange(event: Event): void {
-    this.fullName.set((event.target as HTMLInputElement).value);
+    const raw = (event.target as HTMLInputElement).value;
+    // Solo permitir letras, espacios, tildes, dieresis, ñ y apóstrofes
+    const validChars = raw.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s']/g, '');
+    this.fullName.set(validChars);
+    // Detectar si hubo caracteres inválidos
+    this.fullNameHasInvalidChars.set(raw !== validChars);
+  }
+
+  isValidIdNumber(): boolean {
+    return this.idNumber().length >= 7 && this.idNumber().length <= 9;
+  }
+
+  isValidName(): boolean {
+    const name = this.fullName().trim();
+    const words = name.split(/\s+/).filter(w => w.length > 0);
+    return words.length >= 2;
+  }
+
+  isValidPhone(): boolean {
+    return this.phone().length >= 10;
   }
 
   setGuests(n: number): void {
@@ -95,6 +130,16 @@ export class ReservationComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.loadRecaptchaScript();
     this.loadConfig();
+    this.loadReservas();
+  }
+
+  async loadReservas(): Promise<void> {
+    const { data, error } = await this.supabase.getReservas();
+    if (data) {
+      this.reservas.set(data);
+    } else if (error) {
+      console.error('Error loading reservas:', error);
+    }
   }
 
   async loadConfig(): Promise<void> {
@@ -144,21 +189,15 @@ export class ReservationComponent implements AfterViewInit {
     this.selectedTable.set(n);
   }
 
-  async loadAvailableTables(): Promise<void> {
+  loadAvailableTables(): void {
     if (!this.selectedDate()) {
       this.availableTables.set(this.tableOptions());
       return;
     }
 
-    const { data: reservas, error } = await this.supabase.getReservas();
-    if (error) {
-      this.toast.error('Error al cargar mesas', error.message);
-      return;
-    }
-
-    const occupiedTables = reservas
-      .filter(r => r.fecha === this.selectedDate() && r.numero_mesa)
-      .map(r => r.numero_mesa!);
+    const occupiedTables = this.reservas()
+      .filter((r: Reserva) => r.fecha === this.selectedDate())
+      .map((r: Reserva) => r.numero_mesa);
 
     const available = this.tableOptions().filter((table: number) => !occupiedTables.includes(table));
     this.availableTables.set(available);
@@ -168,31 +207,26 @@ export class ReservationComponent implements AfterViewInit {
     }
   }
 
+  isFormValid(): boolean {
+    return !!(
+      this.idNumber() &&
+      this.isValidIdNumber() &&
+      this.fullName() &&
+      this.isValidName() &&
+      this.phone() &&
+      this.isValidPhone() &&
+      this.selectedDate() &&
+      this.selectedTime() &&
+      this.guests() &&
+      this.selectedTable()
+    );
+  }
+
   handleSubmit(event: Event): void {
     event.preventDefault();
 
-    if (!this.idNumber() || !this.fullName() || !this.phone() || !this.selectedDate() || !this.selectedTime()) {
-      this.toast.error('Campos incompletos', 'Por favor complete todos los campos');
-      return;
-    }
-
-    if (this.phone().length < 10) {
-      this.toast.error('Teléfono inválido', 'El teléfono debe tener al menos 10 dígitos');
-      return;
-    }
-
-    if (!this.guests()) {
-      this.toast.error('Comensales requeridos', 'Por favor selecciona el número de comensales');
-      return;
-    }
-
-    if (!this.recaptchaToken()) {
-      this.toast.error('Verificación requerida', 'Por favor completa el reCAPTCHA');
-      return;
-    }
-
-    if (!this.selectedTable()) {
-      this.toast.error('Mesa requerida', 'Por favor selecciona una mesa');
+    if (!this.isFormValid()) {
+      this.toast.error('Campos incompletos', 'Por favor complete todos los campos correctamente');
       return;
     }
 
@@ -215,10 +249,35 @@ export class ReservationComponent implements AfterViewInit {
   onSmsModalClose(): void {
     this.showSmsModal.set(false);
     this.pendingReserva.set(null);
+    this.customerEmail.set('');
+  }
+
+  async onRequestCode(email: string): Promise<void> {
+    this.customerEmail.set(email);
+    
+    // Enviar código OTP con Supabase
+    const { error } = await this.supabase.sendOtp(email);
+    
+    if (error) {
+      this.toast.error('Error al enviar código', error.message);
+      return;
+    }
+    
+    this.toast.success('Código enviado', `Se ha enviado un código de verificación a ${email}`);
   }
 
   async onSmsConfirm(code: string): Promise<void> {
-    if (code !== this.CONFIRMATION_CODE) {
+    const email = this.customerEmail();
+    if (!email) {
+      this.toast.error('Error', 'No hay correo registrado');
+      this.showSmsModal.set(false);
+      return;
+    }
+
+    // Verificar OTP con Supabase
+    const { error } = await this.supabase.verifyOtp(email, code);
+    
+    if (error) {
       this.toast.error('Código incorrecto', 'El código ingresado no es válido');
       return;
     }
@@ -231,9 +290,9 @@ export class ReservationComponent implements AfterViewInit {
     }
 
     // Guardar en Supabase
-    const { error } = await this.supabase.createReserva(reserva);
-    if (error) {
-      this.toast.error('Error al crear reserva', error.message);
+    const { error: reservaError } = await this.supabase.createReserva(reserva);
+    if (reservaError) {
+      this.toast.error('Error al crear reserva', reservaError.message);
       this.showSmsModal.set(false);
       return;
     }
@@ -254,6 +313,7 @@ export class ReservationComponent implements AfterViewInit {
     this.availableTables.set(this.tableOptions());
     this.showSmsModal.set(false);
     this.pendingReserva.set(null);
+    this.customerEmail.set('');
 
     // Generar PDF del recibo
     this.generateReceipt(reserva);
@@ -297,7 +357,7 @@ export class ReservationComponent implements AfterViewInit {
     y += 10;
     doc.text(`Teléfono: ${reserva.telefono}`, 20, y);
     y += 10;
-    doc.text(`Fecha: ${reserva.fecha}`, 20, y);
+    doc.text(`Fecha: ${this.formatDate(reserva.fecha)}`, 20, y);
     y += 10;
     doc.text(`Hora: ${this.formatTo12Hour(reserva.hora)}`, 20, y);
     y += 10;
