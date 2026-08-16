@@ -42,6 +42,11 @@
             class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
           />
         </div>
+        @if (idNumber() && !isValidIdNumber()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            La cédula debe tener entre 7 y 9 dígitos
+          </p>
+        }
       </div>
 
       <!-- Nombre -->
@@ -60,6 +65,11 @@
           placeholder="Ingrese su nombre completo"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
+        @if (fullName() && !isValidName()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Ingrese únicamente su nombre y apellido
+          </p>
+        }
       </div>
 
       <!-- Teléfono -->
@@ -78,6 +88,11 @@
           placeholder="04241234567"
           class="rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B] w-full" style="background-color: var(--input); border: 1px solid var(--border);"
         />
+        @if (phone() && !isValidPhone()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            El teléfono debe tener al menos 10 dígitos
+          </p>
+        }
       </div>
 
       <!-- Fecha -->

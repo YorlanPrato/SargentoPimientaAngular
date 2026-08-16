@@ -83,6 +83,20 @@ export class ReservationComponent implements AfterViewInit {
     this.fullName.set(validChars);
   }
 
+  isValidIdNumber(): boolean {
+    return this.idNumber().length >= 7 && this.idNumber().length <= 9;
+  }
+
+  isValidName(): boolean {
+    const name = this.fullName().trim();
+    const words = name.split(/\s+/).filter(w => w.length > 0);
+    return words.length >= 2;
+  }
+
+  isValidPhone(): boolean {
+    return this.phone().length >= 10;
+  }
+
   setGuests(n: number): void {
     this.guests.set(n);
   }
@@ -179,9 +193,11 @@ export class ReservationComponent implements AfterViewInit {
   isFormValid(): boolean {
     return !!(
       this.idNumber() &&
+      this.isValidIdNumber() &&
       this.fullName() &&
+      this.isValidName() &&
       this.phone() &&
-      this.phone().length >= 10 &&
+      this.isValidPhone() &&
       this.selectedDate() &&
       this.selectedTime() &&
       this.guests() &&
