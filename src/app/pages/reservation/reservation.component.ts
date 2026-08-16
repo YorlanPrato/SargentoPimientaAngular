@@ -186,11 +186,6 @@ export class ReservationComponent implements AfterViewInit {
       return;
     }
 
-    if (!this.recaptchaToken()) {
-      this.toast.error('Verificación requerida', 'Por favor completa el reCAPTCHA');
-      return;
-    }
-
     if (!this.selectedTable()) {
       this.toast.error('Mesa requerida', 'Por favor selecciona una mesa');
       return;

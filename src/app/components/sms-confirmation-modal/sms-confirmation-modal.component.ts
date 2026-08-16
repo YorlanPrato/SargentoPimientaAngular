@@ -76,6 +76,14 @@ export class SmsConfirmationModalComponent implements AfterViewInit {
     if (!this.verificationCode()) {
       return;
     }
+    
+    // Verificar que el captcha esté resuelto
+    const recaptchaResponse = (window as any).grecaptcha?.getResponse();
+    if (!recaptchaResponse) {
+      alert('Por favor completa el reCAPTCHA');
+      return;
+    }
+    
     this.isLoading.set(true);
     // Simular proceso de validación (reemplazar con Supabase OTP)
     setTimeout(() => {
