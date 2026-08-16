@@ -65,10 +65,11 @@ export class ReservationComponent implements AfterViewInit {
   }
 
   onPhoneChange(event: Event): void {
-    const raw = (event.target as HTMLInputElement).value.replace(/\D/g, '');
-    this.phone.set(raw.slice(0, 11));
+    const raw = (event.target as HTMLInputElement).value;
+    const numbers = raw.replace(/\D/g, '');
+    this.phone.set(numbers.slice(0, 11));
     // Detectar si hubo caracteres inválidos
-    this.phoneHasInvalidChars.set(raw !== raw.slice(0, 11));
+    this.phoneHasInvalidChars.set(raw !== numbers.slice(0, 11));
   }
 
   onNationalityChange(event: Event): void {
@@ -184,13 +185,13 @@ export class ReservationComponent implements AfterViewInit {
   }
 
   loadAvailableTables(): void {
-    if (!this.selectedDate() || !this.selectedTime()) {
+    if (!this.selectedDate()) {
       this.availableTables.set(this.tableOptions());
       return;
     }
 
     const occupiedTables = this.reservas()
-      .filter((r: Reserva) => r.fecha === this.selectedDate() && r.hora === this.selectedTime())
+      .filter((r: Reserva) => r.fecha === this.selectedDate())
       .map((r: Reserva) => r.numero_mesa);
 
     const available = this.tableOptions().filter((table: number) => !occupiedTables.includes(table));
