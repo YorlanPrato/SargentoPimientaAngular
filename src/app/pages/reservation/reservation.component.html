@@ -47,6 +47,11 @@
             La cédula debe tener entre 7 y 9 dígitos
           </p>
         }
+        @if (idNumberHasInvalidChars()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Solo se permiten números
+          </p>
+        }
       </div>
 
       <!-- Nombre -->
@@ -70,6 +75,11 @@
             Ingrese únicamente su nombre y apellido
           </p>
         }
+        @if (fullNameHasInvalidChars()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Solo se permiten letras, tildes y espacios
+          </p>
+        }
       </div>
 
       <!-- Teléfono -->
@@ -91,6 +101,11 @@
         @if (phone() && !isValidPhone()) {
           <p class="mt-2 text-sm" style="color: #ef4444;">
             El teléfono debe tener al menos 10 dígitos
+          </p>
+        }
+        @if (phoneHasInvalidChars()) {
+          <p class="mt-2 text-sm" style="color: #ef4444;">
+            Solo se permiten números
           </p>
         }
       </div>

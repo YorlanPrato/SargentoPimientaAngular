@@ -33,10 +33,15 @@ export class ReservationComponent implements AfterViewInit {
   selectedDate = signal('');
   selectedTime = signal('');
   selectedTable = signal<number | null>(null);
-  availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+ availableTables = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   reservas = signal<Reserva[]>([]);
   recaptchaToken = signal('');
   recaptchaSiteKey = (import.meta as any).env?.['RECAPTCHA_SITE_KEY'] || '6LcaeCAtAAAAAJITlUfGGbA1M5F-V0WI4tutTyN0';
+  
+  // Errores de caracteres inválidos
+  idNumberHasInvalidChars = signal(false);
+  fullNameHasInvalidChars = signal(false);
+  phoneHasInvalidChars = signal(false);
   
   // SMS Confirmation
   showSmsModal = signal(false);
@@ -55,11 +60,15 @@ export class ReservationComponent implements AfterViewInit {
     const raw = (event.target as HTMLInputElement).value;
     const numbers = raw.replace(/\D/g, '');
     this.idNumber.set(numbers.slice(0, 9));
+    // Detectar si hubo caracteres inválidos
+    this.idNumberHasInvalidChars.set(raw !== numbers.slice(0, 9));
   }
 
   onPhoneChange(event: Event): void {
     const raw = (event.target as HTMLInputElement).value.replace(/\D/g, '');
     this.phone.set(raw.slice(0, 11));
+    // Detectar si hubo caracteres inválidos
+    this.phoneHasInvalidChars.set(raw !== raw.slice(0, 11));
   }
 
   onNationalityChange(event: Event): void {
@@ -81,6 +90,8 @@ export class ReservationComponent implements AfterViewInit {
     // Solo permitir letras, espacios, tildes, dieresis, ñ y apóstrofes
     const validChars = raw.replace(/[^a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s']/g, '');
     this.fullName.set(validChars);
+    // Detectar si hubo caracteres inválidos
+    this.fullNameHasInvalidChars.set(raw !== validChars);
   }
 
   isValidIdNumber(): boolean {
@@ -172,7 +183,7 @@ export class ReservationComponent implements AfterViewInit {
     this.selectedTable.set(n);
   }
 
-  async loadAvailableTables(): Promise<void> {
+  loadAvailableTables(): void {
     if (!this.selectedDate() || !this.selectedTime()) {
       this.availableTables.set(this.tableOptions());
       return;
