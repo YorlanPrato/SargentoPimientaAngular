@@ -13,6 +13,8 @@ export class SmsConfirmationModalComponent implements AfterViewInit {
   isOpen = input.required<boolean>();
   pendingReserva = input.required<Reserva | null>();
   recaptchaSiteKey = input.required<string>();
+  formatDate = input.required<(date: string) => string>();
+  formatTime = input.required<(time: string) => string>();
   close = output<void>();
   requestCode = output<string>();
   confirm = output<string>();

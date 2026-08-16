@@ -56,6 +56,11 @@ export class ReservationComponent implements AfterViewInit {
     return `${hour12}:${minutes} ${ampm}`;
   }
 
+  formatDate(dateStr: string): string {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
   onIdChange(event: Event): void {
     const raw = (event.target as HTMLInputElement).value;
     const numbers = raw.replace(/\D/g, '');
@@ -352,7 +357,7 @@ export class ReservationComponent implements AfterViewInit {
     y += 10;
     doc.text(`Teléfono: ${reserva.telefono}`, 20, y);
     y += 10;
-    doc.text(`Fecha: ${reserva.fecha}`, 20, y);
+    doc.text(`Fecha: ${this.formatDate(reserva.fecha)}`, 20, y);
     y += 10;
     doc.text(`Hora: ${this.formatTo12Hour(reserva.hora)}`, 20, y);
     y += 10;

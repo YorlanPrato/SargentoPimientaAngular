@@ -15,8 +15,8 @@
             <p><strong>Nombre:</strong> {{ pendingReserva()?.nombre_cliente }}</p>
             <p><strong>Cédula:</strong> {{ pendingReserva()?.cedula }}</p>
             <p><strong>Teléfono:</strong> {{ pendingReserva()?.telefono }}</p>
-            <p><strong>Fecha:</strong> {{ pendingReserva()?.fecha }}</p>
-            <p><strong>Hora:</strong> {{ pendingReserva()?.hora }}</p>
+            <p><strong>Fecha:</strong> {{ formatDate(pendingReserva()?.fecha || '') }}</p>
+            <p><strong>Hora:</strong> {{ formatTime(pendingReserva()?.hora || '') }}</p>
             <p><strong>Comensales:</strong> {{ pendingReserva()?.comensales }}</p>
             <p><strong>Mesa:</strong> {{ pendingReserva()?.numero_mesa }}</p>
           </div>
