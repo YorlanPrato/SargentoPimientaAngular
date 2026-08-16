@@ -40,7 +40,7 @@ export class ReservationComponent implements AfterViewInit {
   // SMS Confirmation
   showSmsModal = signal(false);
   pendingReserva = signal<Reserva | null>(null);
-  readonly CONFIRMATION_CODE = '123456';
+  customerEmail = signal('');
 
   formatTo12Hour(time24: string): string {
     const [hours, minutes] = time24.split(':');
@@ -215,10 +215,35 @@ export class ReservationComponent implements AfterViewInit {
   onSmsModalClose(): void {
     this.showSmsModal.set(false);
     this.pendingReserva.set(null);
+    this.customerEmail.set('');
+  }
+
+  async onRequestCode(email: string): Promise<void> {
+    this.customerEmail.set(email);
+    
+    // Enviar código OTP con Supabase
+    const { error } = await this.supabase.sendOtp(email);
+    
+    if (error) {
+      this.toast.error('Error al enviar código', error.message);
+      return;
+    }
+    
+    this.toast.success('Código enviado', `Se ha enviado un código de verificación a ${email}`);
   }
 
   async onSmsConfirm(code: string): Promise<void> {
-    if (code !== this.CONFIRMATION_CODE) {
+    const email = this.customerEmail();
+    if (!email) {
+      this.toast.error('Error', 'No hay correo registrado');
+      this.showSmsModal.set(false);
+      return;
+    }
+
+    // Verificar OTP con Supabase
+    const { error } = await this.supabase.verifyOtp(email, code);
+    
+    if (error) {
       this.toast.error('Código incorrecto', 'El código ingresado no es válido');
       return;
     }
@@ -231,9 +256,9 @@ export class ReservationComponent implements AfterViewInit {
     }
 
     // Guardar en Supabase
-    const { error } = await this.supabase.createReserva(reserva);
-    if (error) {
-      this.toast.error('Error al crear reserva', error.message);
+    const { error: reservaError } = await this.supabase.createReserva(reserva);
+    if (reservaError) {
+      this.toast.error('Error al crear reserva', reservaError.message);
       this.showSmsModal.set(false);
       return;
     }
@@ -254,6 +279,7 @@ export class ReservationComponent implements AfterViewInit {
     this.availableTables.set(this.tableOptions());
     this.showSmsModal.set(false);
     this.pendingReserva.set(null);
+    this.customerEmail.set('');
 
     // Generar PDF del recibo
     this.generateReceipt(reserva);

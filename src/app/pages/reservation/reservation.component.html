@@ -206,8 +206,9 @@
   <!-- SMS Confirmation Modal -->
   <app-sms-confirmation-modal
     [isOpen]="showSmsModal()"
-    [phoneNumber]="phone()"
+    [pendingReserva]="pendingReserva()"
     (close)="onSmsModalClose()"
+    (requestCode)="onRequestCode($event)"
     (confirm)="onSmsConfirm($event)"
   />
 </div>
