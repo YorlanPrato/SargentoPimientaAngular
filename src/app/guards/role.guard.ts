@@ -9,13 +9,13 @@ export function roleGuard(requiredRoles: UserRole[]): CanActivateFn {
     const router = inject(Router);
 
     if (!authService.isAuthenticatedSignal()) {
-      router.navigate(['/login']);
+      router.navigate(['/admin']);
       return false;
     }
 
     const userRole = authService.userRole();
     if (!userRole || !requiredRoles.includes(userRole)) {
-      router.navigate(['/unauthorized']);
+      router.navigate(['/admin/dashboard']);
       return false;
     }
 

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { superAdminGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -27,9 +28,20 @@ export const routes: Routes = [
       import('./pages/admin/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
   },
   {
+    path: 'admin/reset-password',
+    loadComponent: () =>
+      import('./pages/admin/admin-reset-password/admin-reset-password.component').then(m => m.AdminResetPasswordComponent)
+  },
+  {
     path: 'admin/dashboard',
     loadComponent: () =>
       import('./pages/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)
+  },
+  {
+    path: 'admin/admins',
+    loadComponent: () =>
+      import('./pages/admin/admin-admins/admin-admins.component').then(m => m.AdminAdminsComponent),
+    canActivate: [superAdminGuard]
   },
   {
     path: 'admin/reservas',
