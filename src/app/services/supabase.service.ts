@@ -6,16 +6,30 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private supabaseAdmin: SupabaseClient;
 
   constructor() {
-    const supabaseUrl = (import.meta as any).env?.['SUPABASE_URL'] || 'https://mbtqfihaqdvofudfdpbw.supabase.co';
-    const supabaseAnonKey = (import.meta as any).env?.['SUPABASE_ANON_KEY'] || 'sb_publishable_55PinTLjnU1CYVdARWfgUw_1MTKMdnU';
+    const supabaseUrl = 'https://mbtqfihaqdvofudfdpbw.supabase.co';
+    const supabaseAnonKey = 'sb_publishable_55PinTLjnU1CYVdARWfgUw_1MTKMdnU';
+    const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHFmaWhhcWR2b2Z1ZGZkcGJ3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTQyODQwNSwiZXhwIjoyMDk1MDA0NDA1fQ.1dsSdyCgSpbwD7chVudSMoYKJhOOAQRtJjKVYvYwuMM';
     
     this.supabase = createClient(supabaseUrl, supabaseAnonKey);
+    
+    // Cliente con service_role_key para operaciones de administración
+    if (supabaseServiceKey) {
+      this.supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
+    } else {
+      console.warn('Service role key no configurado. Las operaciones de administración no funcionarán.');
+      this.supabaseAdmin = this.supabase;
+    }
   }
 
   get client(): SupabaseClient {
     return this.supabase;
+  }
+
+  get adminClient(): SupabaseClient {
+    return this.supabaseAdmin;
   }
 
   // Reservas
@@ -172,5 +186,53 @@ export class SupabaseService {
 
   async updateSitioInfo(section: string, data: any) {
     return await this.supabase.from('sitio_info').update(data).eq('section', section);
+  }
+
+  // Admin Users
+  async getAdminUsers() {
+    return await this.supabase.from('admin_users').select('*');
+  }
+
+  async getAdminUserByCedula(cedula: string) {
+    return await this.supabase.from('admin_users').select('*').eq('cedula', cedula).single();
+  }
+
+  async getAdminUserByEmail(email: string) {
+    return await this.supabase.from('admin_users').select('*').eq('email', email).single();
+  }
+
+  async createAdminUser(adminUser: any) {
+    return await this.supabase.from('admin_users').insert(adminUser);
+  }
+
+  async updateAdminUser(id: string, adminUser: any) {
+    return await this.supabase.from('admin_users').update(adminUser).eq('id', id);
+  }
+
+  async deleteAdminUser(id: string) {
+    return await this.supabase.from('admin_users').delete().eq('id', id);
+  }
+
+  // Métodos para gestión de usuarios con app_metadata (requiere service_role_key)
+  async createAdminUserWithMetadata(email: string, password: string, role: string, cedula: string) {
+    return await this.supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      app_metadata: {
+        role,
+        cedula
+      }
+    });
+  }
+
+  async updateUserMetadata(userId: string, metadata: any) {
+    return await this.supabaseAdmin.auth.admin.updateUserById(userId, {
+      app_metadata: metadata
+    });
+  }
+
+  async deleteUser(userId: string) {
+    return await this.supabaseAdmin.auth.admin.deleteUser(userId);
   }
 }

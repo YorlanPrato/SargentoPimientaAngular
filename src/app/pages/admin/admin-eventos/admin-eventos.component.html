@@ -179,7 +179,7 @@
             @for (item of eventos(); track item.id) {
               <tr class="border-b hover:bg-[var(--muted)]" style="border-color: var(--border);">
                 <td class="px-6 py-4" style="color: var(--foreground);">{{ item.titulo }}</td>
-                <td class="px-6 py-4" style="color: var(--foreground);">{{ item.fecha_evento }}</td>
+                <td class="px-6 py-4" style="color: var(--foreground);">{{ formatDate(item.fecha_evento) }}</td>
                 <td class="px-6 py-4" style="color: var(--foreground);">{{ item.hora || '-' }}</td>
                 <td class="px-6 py-4" style="color: var(--foreground);">{{ item.artista || '-' }}</td>
                 <td class="px-6 py-4" style="color: var(--foreground);">{{ item.genero || '-' }}</td>

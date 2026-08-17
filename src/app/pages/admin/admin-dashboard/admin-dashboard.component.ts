@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SupabaseService } from '../../../services/supabase.service';
 import { ThemeService } from '../../../services/theme.service';
+import { AuthService } from '../../../services/auth.service';
+import { User, ROLE_LABELS } from '../../../types/roles';
 import { Reserva, Menu, Evento } from '../../../models/supabase';
 
 @Component({
@@ -15,12 +17,41 @@ export class AdminDashboardComponent implements OnInit {
   private router = inject(Router);
   private supabase = inject(SupabaseService);
   private themeService = inject(ThemeService);
+  private authService = inject(AuthService);
 
   reservas = signal<Reserva[]>([]);
   menuItems = signal<Menu[]>([]);
   eventos = signal<Evento[]>([]);
 
   isLoading = signal(true);
+
+  get currentUser() {
+    return this.authService.currentUserSignal();
+  }
+
+  get roleLabel(): string {
+    return this.currentUser?.role ? ROLE_LABELS[this.currentUser.role] : '';
+  }
+
+  get canManageAdmins(): boolean {
+    return this.authService.permissions().canManageAdmins;
+  }
+
+  get canManageReservas(): boolean {
+    return this.authService.permissions().canManageReservas;
+  }
+
+  get canManageMenu(): boolean {
+    return this.authService.permissions().canManageMenu;
+  }
+
+  get canManageEventos(): boolean {
+    return this.authService.permissions().canManageEventos;
+  }
+
+  get canManageInformacion(): boolean {
+    return this.authService.permissions().canManageInformacion;
+  }
 
   get isDarkMode(): boolean {
     return this.themeService.isDarkMode();
@@ -31,12 +62,19 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    console.log('Dashboard ngOnInit called');
+    
     // Check authentication with Supabase
     const { data: { session } } = await this.supabase.getSession();
+    console.log('Session:', session);
+    
     if (!session) {
       this.router.navigate(['/admin']);
       return;
     }
+
+    console.log('Current user in dashboard:', this.authService.currentUserSignal());
+    console.log('User role:', this.authService.currentUserSignal()?.role);
 
     await this.loadData();
   }

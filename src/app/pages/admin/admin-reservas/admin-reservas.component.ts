@@ -109,6 +109,15 @@ export class AdminReservasComponent implements OnInit {
     return parseInt(value, 10);
   }
 
+  formatDate(dateString: string): string {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
   openMaxGuestsConfig(): void {
     this.configType.set('guests');
     this.isConfiguring.set(true);
