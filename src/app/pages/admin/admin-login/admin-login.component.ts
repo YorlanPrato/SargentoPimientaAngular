@@ -3,56 +3,56 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../services/toast.service';
-import { SupabaseService } from '../../../services/supabase.service';
+import { AuthService } from '../../../services/auth.service';
+import { PasswordResetModalComponent } from '../../../components/password-reset-modal/password-reset-modal.component';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, PasswordResetModalComponent],
   templateUrl: './admin-login.component.html',
 })
 export class AdminLoginComponent implements OnInit {
   private router = inject(Router);
   private toast = inject(ToastService);
-  private supabase = inject(SupabaseService);
+  private authService = inject(AuthService);
 
-  password = signal('admin123');
+  email = signal('');
+  password = signal('');
   isLoading = signal(false);
-  private readonly ADMIN_EMAIL = 'sargentopimientaweb@gmail.com';
+  showResetModal = signal(false);
 
   async ngOnInit(): Promise<void> {
-    const { data: { session } } = await this.supabase.getSession();
-    if (session) {
+    if (this.authService.isAuthenticatedSignal()) {
       this.router.navigate(['/admin/dashboard']);
     }
   }
 
   async login(): Promise<void> {
-    if (!this.password()) {
-      this.toast.error('Error', 'Por favor ingrese la contraseña');
+    if (!this.email() || !this.password()) {
+      this.toast.error('Error', 'Por favor ingrese email y contraseña');
       return;
     }
 
     this.isLoading.set(true);
 
-    try {
-      const { data, error } = await this.supabase.signIn(this.ADMIN_EMAIL, this.password());
+    const result = await this.authService.loginWithEmail(this.email(), this.password());
 
-      if (error) {
-        this.toast.error('Error', 'Contraseña incorrecta');
-      } else {
-        localStorage.setItem('adminAuthenticated', 'true');
-        this.toast.success('Bienvenido', 'Acceso al panel de administrador');
-        this.router.navigate(['/admin/dashboard']);
-      }
-    } catch (err) {
-      this.toast.error('Error', 'Ocurrió un error al iniciar sesión');
+    if (result.success) {
+      this.toast.success('Bienvenido', 'Acceso al panel de administrador');
+      this.router.navigate(['/admin/dashboard']);
+    } else {
+      this.toast.error('Error', result.error || 'Error al iniciar sesión');
     }
 
     this.isLoading.set(false);
   }
 
-  resetPassword(): void {
-    this.toast.success('Restablecer Contraseña', 'Instrucciones enviadas al correo de administración');
+  openResetModal(): void {
+    this.showResetModal.set(true);
+  }
+
+  closeResetModal(): void {
+    this.showResetModal.set(false);
   }
 }

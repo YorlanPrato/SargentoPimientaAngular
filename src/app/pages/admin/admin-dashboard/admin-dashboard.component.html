@@ -9,10 +9,22 @@
           class="h-10 w-auto"
         />
         <h1 class="text-xl md:text-2xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
-          Panel de Administración
+          Panel de administración
+          <span class="text-lg md:text-xl ml-2" style="color: var(--muted-foreground);">
+            : {{ roleLabel }}
+          </span>
         </h1>
       </div>
       <div class="flex items-center gap-4">
+        @if (canManageAdmins) {
+          <button
+            (click)="navigateTo('admins')"
+            class="text-sm font-medium hover:text-[#F59E0B] transition-all"
+            style="color: var(--foreground);"
+          >
+            Gestión de Usuarios
+          </button>
+        }
         <button
           (click)="toggleTheme()"
           class="rounded-lg p-2 transition-all"
@@ -81,12 +93,21 @@
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Reservas
             </h2>
-            <button
-              (click)="navigateTo('reservas')"
-              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
-            >
-              Gestionar
-            </button>
+            @if (canManageReservas) {
+              <button
+                (click)="navigateTo('reservas')"
+                class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
+              >
+                Gestionar
+              </button>
+            } @else {
+              <button
+                disabled
+                class="rounded-lg px-6 py-3 cursor-not-allowed opacity-50" style="background-color: var(--muted); color: var(--muted-foreground);"
+              >
+                No disponible para este rol
+              </button>
+            }
           </div>
           <p class="text-sm" style="color: var(--muted-foreground);">
             {{ reservas().length }} reservas registradas
@@ -99,12 +120,21 @@
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Menú
             </h2>
-            <button
-              (click)="navigateTo('menu')"
-              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
-            >
-              Gestionar
-            </button>
+            @if (canManageMenu) {
+              <button
+                (click)="navigateTo('menu')"
+                class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
+              >
+                Gestionar
+              </button>
+            } @else {
+              <button
+                disabled
+                class="rounded-lg px-6 py-3 cursor-not-allowed opacity-50" style="background-color: var(--muted); color: var(--muted-foreground);"
+              >
+                No disponible para este rol
+              </button>
+            }
           </div>
           <p class="text-sm" style="color: var(--muted-foreground);">
             {{ menuItems().length }} platos disponibles
@@ -117,15 +147,24 @@
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Eventos
             </h2>
-            <button
-              (click)="navigateTo('eventos')"
-              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
-            >
-              Gestionar
-            </button>
+            @if (canManageEventos) {
+              <button
+                (click)="navigateTo('eventos')"
+                class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
+              >
+                Gestionar
+              </button>
+            } @else {
+              <button
+                disabled
+                class="rounded-lg px-6 py-3 cursor-not-allowed opacity-50" style="background-color: var(--muted); color: var(--muted-foreground);"
+              >
+                No disponible para este rol
+              </button>
+            }
           </div>
           <p class="text-sm" style="color: var(--muted-foreground);">
-            {{ eventos().length }} eventos activos
+           {{ eventos().length }} eventos activos
           </p>
         </div>
 
@@ -135,12 +174,21 @@
             <h2 class="text-xl" style="font-family:'Urbanist',sans-serif;font-weight:500">
               Gestión de Información
             </h2>
-            <button
-              (click)="navigateTo('informacion')"
-              class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
-            >
-              Gestionar
-            </button>
+            @if (canManageInformacion) {
+              <button
+                (click)="navigateTo('informacion')"
+                class="rounded-lg hover:bg-[#F59E0B]/90 transition-all px-6 py-3" style="background-color: var(--primary); color: #121212;"
+              >
+                Gestionar
+              </button>
+            } @else {
+              <button
+                disabled
+                class="rounded-lg px-6 py-3 cursor-not-allowed opacity-50" style="background-color: var(--muted); color: var(--muted-foreground);"
+              >
+                No disponible para este rol
+              </button>
+            }
           </div>
           <p class="text-sm" style="color: var(--muted-foreground);">
             Editar información general del Sitio Web

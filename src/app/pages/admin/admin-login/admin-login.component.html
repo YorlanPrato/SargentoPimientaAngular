@@ -7,6 +7,18 @@
       
       <form (submit)="login()">
         <div class="mb-6">
+          <label class="block mb-2" style="color: var(--foreground);">Email</label>
+          <input
+            type="email"
+            [value]="email()"
+            (input)="email.set($any($event.target).value)"
+            placeholder="Ingrese su correo electrónico"
+            class="w-full rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#F59E0B]" style="background-color: var(--background); border: 1px solid var(--border);"
+            [disabled]="isLoading()"
+          />
+        </div>
+
+        <div class="mb-6">
           <label class="block mb-2" style="color: var(--foreground);">Contraseña</label>
           <input
             type="password"
@@ -39,7 +51,7 @@
         <div class="mt-4 text-center">
           <button
             type="button"
-            (click)="resetPassword()"
+            (click)="openResetModal()"
             class="text-red-500 hover:text-red-400 transition-colors text-sm"
           >
             Restablecer Contraseña
@@ -48,4 +60,9 @@
       </form>
     </div>
   </div>
+
+  <app-password-reset-modal
+    [isOpen]="showResetModal()"
+    (close)="closeResetModal()"
+  />
 </div>

@@ -192,7 +192,7 @@
                   <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.cedula }}</td>
                   <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.nombre_cliente }}</td>
                   <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.telefono }}</td>
-                  <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.fecha }}</td>
+                  <td class="px-6 py-4" style="color: var(--foreground);">{{ formatDate(reserva.fecha) }}</td>
                   <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.hora }}</td>
                   <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.comensales }}</td>
                   <td class="px-6 py-4" style="color: var(--foreground);">{{ reserva.numero_mesa || '-' }}</td>
